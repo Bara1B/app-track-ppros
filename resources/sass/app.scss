@@ -1,0 +1,165 @@
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// ===================================================
+//  SEMUA STYLE CUSTOM KITA ADA DI SINI, BRO
+// ===================================================
+
+// Import Font Poppins dari Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+// 1. Style buat Halaman Login & Register (Split View)
+// ---------------------------------------------------
+.split-screen-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.split-screen-left {
+    width: 50%; // <-- Balikin lebarnya
+    background-image: linear-gradient(rgba(0, 86, 160, 0.85), rgba(0, 44, 78, 0.85)), url('https://images.unsplash.com/photo-1581093458791-9a6685b353b3?q=80&w=2070&auto-format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+
+    // Ini jurus barunya: bikin potongan melengkung
+    border-top-right-radius: 80px;
+    border-bottom-right-radius: 80px;
+}
+
+.split-screen-right {
+    width: 50%; // <-- Balikin lebarnya
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f8;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230056a0' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.split-screen-logo {
+    max-width: 180px;
+    margin-bottom: 1.5rem;
+}
+
+.login-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btn-phapros {
+    background-color: #0056a0;
+    border-color: #0056a0;
+    color: #fff;
+    padding: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-phapros:hover {
+    background-color: #00447e;
+    border-color: #00447e;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .split-screen-left {
+        display: none;
+    }
+
+    .split-screen-right {
+        width: 100%;
+    }
+}
+
+
+// 2. Style buat Navbar Biru & Tombol-tombolnya
+// ---------------------------------------------------
+.navbar-phapros {
+    background-color: #0056a0;
+
+    .navbar-brand,
+    .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+
+        &:hover {
+            color: #fff !important;
+        }
+    }
+
+    .navbar-nav {
+
+        .btn-nav-login,
+        .btn-nav-register {
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-nav-login {
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            color: rgba(255, 255, 255, 0.75);
+
+            &:hover {
+                background-color: #fff;
+                color: #0056a0;
+            }
+        }
+
+        .btn-nav-register {
+            background-color: #fff;
+            border: 2px solid #fff;
+            color: #0056a0;
+
+            &:hover {
+                background-color: #e9ecef;
+                border-color: #e9ecef;
+            }
+        }
+    }
+}
+
+
+// 3. Style buat Dropdown & Ikonnya
+// ---------------------------------------------------
+.dropdown-menu {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+
+    &:active {
+        background-color: #0056a0;
+        color: #fff;
+    }
+}
+
+.dropdown-icon {
+    width: 15px; // <-- Ukuran ikon yang bener
+    height: 15px;
+    opacity: 0.6;
+}

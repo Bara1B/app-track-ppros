@@ -1,0 +1,67 @@
+/* CSS Kustom untuk Timeline Stepper */
+.timeline-stepper {
+    list-style: none;
+    padding-left: 0;
+    /* Menghapus padding default dari list */
+    position: relative;
+}
+
+/* Garis vertikal di tengah */
+.timeline-stepper::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 11px;
+    /* Posisi garis vertikal dari tepi kiri */
+    width: 3px;
+    background-color: #e9ecef;
+    /* Warna garis */
+    z-index: 0;
+}
+
+.timeline-step {
+    position: relative;
+    padding-left: 40px;
+    /* Jarak untuk teks dari tepi kiri */
+    margin-bottom: 30px;
+}
+
+/* Bulatan (point) */
+.timeline-step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    /* Posisi bulatan di paling kiri */
+    top: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #adb5bd;
+    /* Warna default (abu-abu) untuk bulatan */
+    border: 3px solid #e9ecef;
+    z-index: 1;
+}
+
+/* Mengubah warna bulatan jika sudah selesai (completed) */
+.timeline-step.completed::before {
+    background-color: #198754;
+    /* Warna hijau */
+    border-color: #d1e7dd;
+}
+
+.timeline-step-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.timeline-step-date {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Mengubah warna judul jika sudah selesai (completed) */
+.timeline-step.completed .timeline-step-title {
+    color: #198754;
+    /* Warna hijau */
+}
