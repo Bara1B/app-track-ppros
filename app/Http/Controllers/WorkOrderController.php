@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WorkOrder;
 use App\Models\WorkOrderTracking; // <-- Jangan lupa import class ini
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\MasterProduct;
 
 
@@ -14,6 +15,7 @@ class WorkOrderController extends Controller
     public function show(WorkOrder $workOrder)
     {
         $workOrder->load(['products', 'tracking']);
+        $masterProducts = MasterProduct::orderBy('description')->get();
 
         // Ambil semua master produk untuk dropdown form
         $masterProducts = MasterProduct::orderBy('description')->get();
@@ -45,26 +47,29 @@ class WorkOrderController extends Controller
     public function update(Request $request, WorkOrder $workOrder)
     {
         $validated = $request->validate([
-            'product_kode' => 'required|string|exists:master_products,kode', // Validasi kode produk
             'due_date'     => 'required|date',
+            'product_kode' => 'nullable|string|exists:master_products,kode',
         ]);
 
-        // Cari nama produk (description) berdasarkan kode yang dipilih
-        $product = MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
-
-        // HATI-HATI: Kita TIDAK mengubah nomor WO. Kita hanya update output & due date.
-        $workOrder->update([
-            'output' => $product->description,
+        $updateData = [
             'due_date' => $validated['due_date'],
-        ]);
+        ];
 
-        return redirect()->route('dashboard')->with('success', 'Work Order berhasil di-update!');
+        // Jika ada product_kode yang dikirim, ikut update output-nya
+        if (!empty($validated['product_kode'])) {
+            $product = MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
+            $updateData['output'] = $product->description;
+        }
+
+        $workOrder->update($updateData);
+
+        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order berhasil di-update!');
     }
 
     public function destroy(WorkOrder $workOrder)
     {
         $workOrder->delete();
-        return redirect()->route('dashboard')->with('success', 'Work Order berhasil dihapus!');
+        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order berhasil dihapus!');
     }
 
     // Method store() yang sudah ada ...
@@ -73,7 +78,7 @@ class WorkOrderController extends Controller
         // 1. Validasi input baru dari form
         $validated = $request->validate([
             'product_kode' => 'required|string|exists:master_products,kode',
-            'sequence'     => 'required|string|digits:3',
+            'sequence'     => 'required|integer|min:1|max:999',
             'output'       => 'required|string',
             'due_date'     => 'required|date',
         ]);
@@ -81,10 +86,11 @@ class WorkOrderController extends Controller
         // Ambil data produk dari master
         $product = \App\Models\MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
 
-        // 2. Buat nomor WO di backend buat mastiin datanya bener
-        $year = '86';
+        // 2. Prefix tahun untuk nomor WO bisa diubah via setting UI
+        $year = optional(\App\Models\Setting::where('key', 'wo_year_prefix')->first())->value ?: '86';
         $suffix = substr($product->item_number, -1);
-        $woNumber = $year . $validated['product_kode'] . $validated['sequence'] . $suffix;
+        $paddedSequence = str_pad((string) $validated['sequence'], 3, '0', STR_PAD_LEFT);
+        $woNumber = $year . $validated['product_kode'] . $paddedSequence . $suffix;
 
         // 3. Cek lagi kalo nomor WO ini udah ada, biar makin aman
         $isExist = \App\Models\WorkOrder::where('wo_number', $woNumber)->exists();
@@ -102,14 +108,19 @@ class WorkOrderController extends Controller
 
         // 5. Buat timeline tracking awal
         $trackingSteps = [
-            'WO Diterima', 'Timbang', 'Selesai Timbang', 'Pengurangan Stock',
-            'Released', 'Kirim BB', 'Selesai',
+            'WO Diterima',
+            'Mulai Timbang',
+            'Selesai Timbang',
+            'Potong Stock',
+            'Released',
+            'Kirim BB',
+            'Kirim CPB/WO',
         ];
 
         foreach ($trackingSteps as $step) {
             $workOrder->tracking()->create([
                 'status_name' => $step,
-                'completed_at' => null,
+                'completed_at' => ($step === 'WO Diterima') ? now() : null,
             ]);
         }
 
@@ -122,20 +133,161 @@ class WorkOrderController extends Controller
     /**
      * Memverifikasi dan menyelesaikan satu langkah tracking.
      */
-    public function completeStep(WorkOrderTracking $tracking)
-    {
-        // 1. Update kolom 'completed_at' dengan waktu saat ini
-        $tracking->update(['completed_at' => now()]);
+    // app/Http/Controllers/WorkOrderController.php
 
-        // 2. Cek apakah semua langkah sudah selesai
+    public function completeStep(Request $request, WorkOrderTracking $tracking)
+    {
+        Log::info('--- MEMULAI PROSES VERIFIKASI UNTUK TRACKING ID: ' . $tracking->id . ' ---');
+
+        // Validasi data
+        $validated = $request->validate([
+            'completed_date' => 'required|date',
+            'notes'          => 'nullable|string|max:255',
+        ]);
+
+        Log::info('Data yang akan di-update:', $validated);
+
+        try {
+            Log::info('Mencoba menjalankan $tracking->update()...');
+
+            // Perintah untuk update database
+            // Map completed_date (input form) ke kolom completed_at di database
+            $tracking->update([
+                'completed_at' => $validated['completed_date'],
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
+            Log::info('Perintah update BERHASIL dijalankan tanpa error.');
+
+            // LANGKAH KRITIS: Kita baca lagi datanya langsung dari database setelah update
+            $dataTerbaru = WorkOrderTracking::find($tracking->id);
+            Log::info('Verifikasi data langsung dari DB. Kolom "notes" sekarang berisi: "' . $dataTerbaru->notes . '" dan "completed_at" berisi: "' . $dataTerbaru->completed_at . '"');
+        } catch (\Exception $e) {
+            Log::info('!!! TERJADI ERROR SAAT PROSES UPDATE !!!');
+            Log::info($e->getMessage());
+        }
+
         $workOrder = $tracking->workOrder;
         $allStepsCompleted = $workOrder->tracking()->whereNull('completed_at')->doesntExist();
 
         if ($allStepsCompleted) {
-            $workOrder->update(['status' => 'Completed']);
+            Log::info('Semua langkah selesai, mengupdate status Work Order utama.');
+            $workOrder->update([
+                'status' => 'Completed',
+                'completed_on' => $validated['completed_date']
+            ]);
         }
 
-        // 3. Kembali ke halaman tracking dengan pesan sukses
+        Log::info('--- PROSES SELESAI, MENGARAHKAN KEMBALI KE BROWSER ---');
+
         return back()->with('success', "Status '{$tracking->status_name}' berhasil diverifikasi!");
+    }
+
+    /**
+     * Menampilkan form untuk membuat Work Order secara borongan (bulk).
+     */
+    public function bulkCreate()
+    {
+        $products = MasterProduct::orderBy('kode')->get();
+        return view('work_orders.bulk-create', compact('products'));
+    }
+
+    /**
+     * Menyimpan beberapa Work Order baru sekaligus.
+     */
+    public function bulkStore(Request $request)
+    {
+        $validated = $request->validate([
+            'product_kode'   => 'required|string|exists:master_products,kode',
+            'due_date'       => 'required|date',
+            'start_sequence' => 'required|integer|min:1',
+            'quantity'       => 'required|integer|min:1|max:50',
+        ]);
+
+        $product = MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
+        $year = optional(\App\Models\Setting::where('key', 'wo_year_prefix')->first())->value ?: '86';
+        $suffix = substr($product->item_number, -1);
+        $trackingSteps = [
+            'WO Diterima',
+            'Mulai Timbang',
+            'Selesai Timbang',
+            'Potong Stock',
+            'Released',
+            'Kirim BB',
+            'Kirim CPB/WO',
+        ];
+
+        // Loop buat nge-generate WO sebanyak quantity, mulai dari nomor urut yang diinput
+        for ($i = 0; $i < $validated['quantity']; $i++) {
+            $newSequence = $validated['start_sequence'] + $i;
+            $paddedSequence = str_pad($newSequence, 3, '0', STR_PAD_LEFT);
+            $woNumber = $year . $validated['product_kode'] . $paddedSequence . $suffix;
+
+            // Cek dulu biar ga ada nomor WO duplikat
+            $isExist = WorkOrder::where('wo_number', $woNumber)->exists();
+            if ($isExist) {
+                // Kalo udah ada, kasih error dan stop prosesnya
+                return back()->withInput()->withErrors(['start_sequence' => 'Nomor WO ' . $woNumber . ' sudah ada. Silakan mulai dari nomor urut lain.']);
+            }
+
+            $workOrder = WorkOrder::create([
+                'wo_number' => $woNumber,
+                'output' => $product->description,
+                'due_date' => $validated['due_date'],
+                'status' => 'On Progress',
+            ]);
+
+            // Bikin timeline tracking buat tiap WO
+            foreach ($trackingSteps as $step) {
+                $workOrder->tracking()->create([
+                    'status_name' => $step,
+                    'completed_at' => ($step === 'WO Diterima') ? now() : null,
+                ]);
+            }
+        }
+
+        return redirect()->route('dashboard')->with('success', $validated['quantity'] . ' Work Order baru berhasil dibuat!');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        // Validasi kalo yang dikirim beneran ID
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:work_orders,id',
+        ]);
+
+        // Hapus semua WO yang ID-nya ada di dalem list
+        WorkOrder::whereIn('id', $request->ids)->delete();
+
+        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order yang dipilih berhasil dihapus.');
+    }
+
+    public function bulkUpdateDueDate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids'          => 'required|array',
+            'ids.*'        => 'exists:work_orders,id',
+            'new_due_date' => 'required|date',
+        ]);
+
+        WorkOrder::whereIn('id', $validated['ids'])->update([
+            'due_date' => $validated['new_due_date'],
+        ]);
+
+        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Due date untuk Work Order yang dipilih berhasil di-update.');
+    }
+
+    public function updateTrackingDate(Request $request, WorkOrderTracking $tracking)
+    {
+        $validated = $request->validate([
+            'completed_date' => 'required|date',
+        ]);
+
+        $tracking->update([
+            'completed_at' => $validated['completed_date'],
+        ]);
+
+        return back()->with('success', 'Tanggal untuk ' . $tracking->status_name . ' berhasil di-update.');
     }
 }

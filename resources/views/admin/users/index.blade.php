@@ -14,7 +14,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <div class="card shadow-sm">
+        <div class="card shadow-sm dashboard-card">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -35,12 +35,14 @@
                                             class="badge {{ $user->role == 'admin' ? 'bg-success' : 'bg-secondary' }}">{{ $user->role }}</span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning">✏️</a>
+                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-warning"
+                                            title="Edit">✏️</a>
                                         <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline"
-                                            onsubmit="return confirm('Yakin mau hapus user ini?');">
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                title="Hapus">🗑️</button>
                                         </form>
                                     </td>
                                 </tr>

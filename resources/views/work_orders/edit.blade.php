@@ -18,28 +18,6 @@
                                 <input type="text" class="form-control" value="{{ $workOrder->wo_number }}" disabled>
                             </div>
 
-                            {{-- INPUT TEKS DIGANTI JADI DROPDOWN --}}
-                            <div class="mb-3">
-                                <label for="product_kode" class="form-label">Nama Produk (Output)</label>
-                                <select class="form-select @error('product_kode') is-invalid @enderror" id="product_kode"
-                                    name="product_kode" required>
-                                    <option value="" disabled>-- Pilih Kode Produk --</option>
-                                    @php
-                                        // Ambil kode produk dari WO yang ada, contoh: dari '86002058T' ambil '002'
-                                        $currentKode = substr($workOrder->wo_number, 2, 3);
-                                    @endphp
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->kode }}"
-                                            @if ($product->kode == $currentKode) selected @endif>
-                                            {{ $product->kode }} - {{ $product->description }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('product_kode')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
                             <div class="mb-3">
                                 <label for="due_date" class="form-label">Due Date</label>
                                 <input type="date" class="form-control @error('due_date') is-invalid @enderror"

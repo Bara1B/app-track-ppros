@@ -3,85 +3,75 @@
 namespace App\Exports;
 
 use App\Models\WorkOrder;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use App\Models\WorkOrderTracking;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Carbon\Carbon;
 
-class WorkOrdersExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
+class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    protected $month;
+    protected $year;
+    protected $ids;
+
+    public function __construct($month = null, $year = null, array $ids = null)
     {
-        // Ambil data WO bareng data tracking-nya biar sat set
-        return WorkOrder::with('tracking')->latest()->get();
+        $this->month = $month;
+        $this->year = $year;
+        $this->ids = $ids;
     }
 
-    /**
-     * @return array
-     */
-    public function headings(): array
+    protected function query(): Collection
     {
-        // Bikin heading dasar
-        $baseHeadings = [
-            'Nomor Work Order',
-            'Nama Produk',
-            'Due Date',
-            'Status',
-        ];
+        $query = WorkOrder::with('tracking');
 
-        // Bikin heading buat tiap step tracking
-        $trackingSteps = [
-            'WO Diterima',
-            'Timbang',
-            'Selesai Timbang',
-            'Pengurangan Stock',
-            'Released',
-            'Kirim BB',
-            'Selesai',
-        ];
+        if (!empty($this->ids)) {
+            return $query->whereIn('id', $this->ids)->latest()->get();
+        }
 
-        // Gabungin semua heading jadi satu
-        return array_merge($baseHeadings, $trackingSteps);
+        if ($this->month && $this->year) {
+            $workOrderIds = WorkOrderTracking::where('status_name', 'WO Diterima')
+                ->whereMonth('completed_at', $this->month)
+                ->whereYear('completed_at', $this->year)
+                ->pluck('work_order_id');
+            $query->whereIn('id', $workOrderIds);
+        }
+
+        return $query->latest()->get();
     }
 
-    /**
-     * @var WorkOrder $workOrder
-     */
-    public function map($workOrder): array
+    public function view(): View
     {
-        // Siapin data dasar buat tiap baris
-        $baseData = [
-            $workOrder->wo_number,
-            $workOrder->output,
-            $workOrder->due_date->format('d-m-Y'),
-            $workOrder->status,
+        $rows = $this->query();
+
+        $exportMonth = Carbon::createFromDate(
+            $this->year ?? now()->year,
+            $this->month ?? now()->month,
+            1
+        )->locale('id');
+
+        $titleMonth = $exportMonth->isoFormat('MMMM'); // hanya bulan
+
+        return view('exports.work_orders', [
+            'rows' => $rows,
+            'titleMonth' => $titleMonth,
+            'total' => $rows->count(),
+        ]);
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                // Tebalkan judul dan tengah
+                $sheet = $event->sheet->getDelegate();
+                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+                $sheet->getStyle('A2')->getFont()->setBold(true);
+            },
         ];
-
-        // Bikin "kamus" buat nyimpen tanggal selesai tiap step
-        // Biar gampang nyarinya
-        $trackingDates = [];
-        foreach ($workOrder->tracking as $track) {
-            $trackingDates[$track->status_name] = $track->completed_at
-                ? $track->completed_at->format('d-m-Y H:i')
-                : '-'; // Kalo belom selesai, kasih strip
-        }
-
-        // Urutan step yang mau ditampilin (harus sama kayak di headings)
-        $trackingSteps = [
-            'WO Diterima', 'Timbang', 'Selesai Timbang', 'Pengurangan Stock',
-            'Released', 'Kirim BB', 'Selesai',
-        ];
-
-        $rowData = $baseData;
-        // Loop buat ngisi data tanggal tracking
-        foreach ($trackingSteps as $step) {
-            // Ambil tanggal dari "kamus", kalo ga ada, isi strip
-            $rowData[] = $trackingDates[$step] ?? '-';
-        }
-
-        return $rowData;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; // <--- TAMBAHKAN INI
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -45,7 +46,8 @@ class WorkOrder extends Model
      * @var array
      */
     protected $casts = [
-        'due_date' => 'date', // <-- TAMBAHIN BLOK INI
+        'due_date' => 'date',
+        'completed_on' => 'date', // <-- Tambahkan ini
     ];
 
     public function products(): HasMany
@@ -56,5 +58,15 @@ class WorkOrder extends Model
     public function tracking(): HasMany
     {
         return $this->hasMany(WorkOrderTracking::class)->orderBy('id');
+    }
+
+    public function woDiterimaTracking(): HasOne
+    {
+        return $this->hasOne(WorkOrderTracking::class)->where('status_name', 'WO Diterima');
+    }
+
+    public function masterProduct(): HasOne
+    {
+        return $this->hasOne(MasterProduct::class, 'description', 'output');
     }
 }

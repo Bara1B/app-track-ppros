@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">➕ Tambah Work Order (Form Cerdas)</h4>
+                        <h4 class="mb-0">➕ Tambah Work Order</h4>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('work-orders.store') }}">
@@ -15,7 +15,7 @@
                             {{-- 1. DROPDOWN KODE PRODUK --}}
                             <div class="mb-3">
                                 <label for="product_kode" class="form-label">Kode Produk</label>
-                                <select class="form-select ..." id="product_kode" name="product_kode" required>
+                                <select class="form-select" id="product_kode" name="product_kode" required>
                                     <option value="" selected disabled>-- Pilih Kode Produk --</option>
 
                                     {{-- Pastikan variabelnya $products --}}
@@ -48,12 +48,6 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-
-                            {{-- Tampilan Nomor WO Final --}}
-                            <div class="alert alert-info">
-                                <strong>Nomor Work Order Final:</strong>
-                                <span id="final_wo_display" class="font-monospace"></span>
                             </div>
 
                             {{-- Input tersembunyi untuk data yang akan disimpan --}}
@@ -94,16 +88,13 @@
                     const year = '86';
                     const suffix = itemNumber.slice(-1);
 
-                    // Pastiin sequence selalu 3 digit
-                    const paddedSequence = sequence.padStart(3, '0');
+                    // Pastiin sequence selalu 3 digit (format penyimpanan), input user tidak wajib 0 di depan
+                    const paddedSequence = String(sequence).padStart(3, '0');
 
                     const finalWoNumber = `${year}${selectedKode}${paddedSequence}${suffix}`;
-
-                    finalWoDisplay.textContent = finalWoNumber;
                     woNumberInput.value = finalWoNumber;
                     submitButton.disabled = false; // Aktifin tombol simpan
                 } else {
-                    finalWoDisplay.textContent = '';
                     woNumberInput.value = '';
                     submitButton.disabled = true; // Non-aktifin kalo belum lengkap
                 }
@@ -136,7 +127,11 @@
             });
 
             // Event listener buat input nomor urut manual
-            sequenceInput.addEventListener('input', updateFinalWoNumber);
+            sequenceInput.addEventListener('input', function() {
+                // Hanya izinkan angka dan batasi 3 digit saat menyimpan, namun input boleh tanpa 0 depan
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3);
+                updateFinalWoNumber();
+            });
         });
     </script>
 @endpush

@@ -2,76 +2,72 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\WorkOrder;
-use App\Models\Product;
-use App\Models\WorkOrderTracking;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Hapus data lama untuk menghindari duplikat
+        // 1. Panggil seeder untuk data master dan user terlebih dahulu.
+        // Ini memastikan semua data pendukung sudah ada.
+        $this->call([
+            MasterProductSeeder::class,
+            // UsersTableSeeder::class, // Tidak perlu dipanggil jika user sudah dibuat di sini
+            OvermateMasterSeeder::class,
+        ]);
+
+        // 2. Buat user admin/biasa HANYA JIKA BELUM ADA
+        User::firstOrCreate(
+            ['email' => 'admin@phapros.co.id'],
+            [
+                'name' => 'Admin Phapros',
+                'role' => 'admin',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user@phapros.co.id'],
+            [
+                'name' => 'User Biasa',
+                'role' => 'user',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+
+        // 3. Hapus data transaksional lama
+        // (Ini lebih aman daripada truncate dan disable foreign key)
         WorkOrder::query()->delete();
 
+        // 4. Definisikan langkah-langkah tracking
         $trackingSteps = [
             'WO Diterima',
             'Timbang',
             'Selesai Timbang',
-            'Pengurangan Stock', // Diubah dari 'Packing Stock'
-            'Released',
+            'Potong Stock',
+            'Released', // Saya ganti 'Rilis' menjadi 'Released' agar konsisten
             'Kirim BB',
-            'Selesai',           // 'Kirim CPB/WO' dihapus dan digabung ke sini
+            'Kirim CPB/WO',
         ];
 
         // === BUAT WORK ORDER 1 (Sebagian Selesai) ===
         $wo1 = WorkOrder::create([
-            'wo_number' => '8004028T',
-            'id_number' => '812424',
-            'output' => 'gbn',
+            'wo_number' => '86002001T',
+            'output' => 'Antimo Tablet',
             'due_date' => now()->addDays(10),
+            'status' => 'On Progress',
         ]);
 
-        // Tambah produk untuk WO 1
-        $wo1->products()->createMany([
-            ['item_number' => '14301003', 'description' => 'AIR MURNI', 'qty_required' => 64.8, 'uom' => 'Lt'],
-            ['item_number' => '14301102', 'description' => 'ACETAMINOPHEN', 'qty_required' => 160.0, 'uom' => 'Kg'],
-        ]);
-
-        // Buat tracking progres untuk WO 1 (4 dari 8 langkah selesai)
-        for ($i = 0; $i < 4; $i++) {
-            WorkOrderTracking::create([
-                'work_order_id' => $wo1->id,
-                'status_name' => $trackingSteps[$i],
-                'completed_at' => now()->subDays(4 - $i), // Tanggal mundur
-            ]);
-        }
-        // Tambahkan sisa langkah yang belum selesai
-        for ($i = 4; $i < count($trackingSteps); $i++) {
-            WorkOrderTracking::create([
-                'work_order_id' => $wo1->id,
-                'status_name' => $trackingSteps[$i],
-                'completed_at' => null, // Belum selesai
-            ]);
-        }
-
-        // === BUAT WORK ORDER 2 (Semua Selesai) ===
-        $wo2 = WorkOrder::create([
-            'wo_number' => '8005112B',
-            'id_number' => '812555',
-            'output' => 'xyz',
-            'due_date' => now()->addDays(5),
-            'status' => 'Completed'
-        ]);
-
-        // Buat tracking progres untuk WO 2 (semua langkah selesai)
+        // Buat semua tracking untuk WO 1 dalam satu loop yang bersih
         foreach ($trackingSteps as $index => $step) {
-            WorkOrderTracking::create([
-                'work_order_id' => $wo2->id,
+            $wo1->tracking()->create([
                 'status_name' => $step,
-                'completed_at' => now()->subDays(count($trackingSteps) - $index),
+                // Buat 4 langkah pertama selesai
+                'completed_at' => ($index < 4) ? now()->subDays(4 - $index) : null,
             ]);
         }
-        $this->call(MasterProductSeeder::class); // Panggil seeder produk
     }
 }
