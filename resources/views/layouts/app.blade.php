@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('phapros-icon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('phapros-favicon.ico') }}" type="image/x-icon">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/tracking.css'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/tracking.css', 'resources/css/custom-table.css'])
     @stack('styles')
     <style>
         /* Style untuk tombol toggle dark mode */
@@ -152,6 +152,7 @@
         </div>
     </div>
     @stack('scripts')
+
     <script>
         // Logika untuk Dark Mode & Sidebar Toggle
         (function() {
@@ -215,6 +216,29 @@
                         const newState = sidebar.classList.contains('collapsed') ? 'collapsed' : 'expanded';
                         localStorage.setItem('sidebarState', newState);
                     }
+                });
+            }
+
+            // Pastikan dropdown profil bisa terbuka walau data attribute tidak terproses
+            const profileToggle = document.getElementById('navbarDropdown');
+            const profileDropdown = profileToggle?.nextElementSibling;
+
+            if (profileToggle && profileDropdown) {
+                profileToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Toggle dropdown manually
+                    const isVisible = profileDropdown.style.display === 'block';
+                    profileDropdown.style.display = isVisible ? 'none' : 'block';
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function closeDropdown(e) {
+                        if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
+                            profileDropdown.style.display = 'none';
+                            document.removeEventListener('click', closeDropdown);
+                        }
+                    });
                 });
             }
         })();

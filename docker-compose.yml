@@ -1,32 +1,5 @@
 version: '3'
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.2 # Sesuaikan versi PHP jika perlu
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app # Sesuaikan versi PHP jika perlu
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-        volumes:
-            - '.:/var/www/html'
-            # Mount sertifikat yang kita buat ke dalam kontainer
-            - './.docker/certs:/etc/nginx/ssl:ro'
-            # Mount file Nginx kita, menimpa file default di dalam kontainer
-            - './.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
-        networks:
-            - sail
-        depends_on:
-            - mysql
-            - redis
-            - mailpit
     mysql:
         image: 'mysql:8.0'
         ports:
@@ -43,34 +16,10 @@ services:
             - sail
         healthcheck:
             test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${MYSQL_PASSWORD}'
+                - CMD-SHELL
+                - mysqladmin ping -p$${MYSQL_PASSWORD}
             retries: 3
             timeout: 5s
-    redis:
-        image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            - 'sail-redis:/data'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - redis-cli
-                - ping
-            retries: 3
-            timeout: 5s
-    mailpit:
-        image: 'axllent/mailpit:latest'
-        ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - sail
     phpmyadmin:
         image: 'phpmyadmin/phpmyadmin:latest'
         ports:
@@ -79,8 +28,6 @@ services:
             PMA_HOST: mysql
             PMA_PORT: 3306
             UPLOAD_LIMIT: 128M
-        depends_on:
-            - mysql
         networks:
             - sail
 networks:
@@ -88,6 +35,4 @@ networks:
         driver: bridge
 volumes:
     sail-mysql:
-        driver: local
-    sail-redis:
         driver: local

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @property int $id
  * @property string $wo_number
- * @property string $id_number
  * @property string|null $output
  * @property string $due_date
  * @property string $status
@@ -27,7 +26,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereDueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereIdNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereOutput($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WorkOrder whereUpdatedAt($value)

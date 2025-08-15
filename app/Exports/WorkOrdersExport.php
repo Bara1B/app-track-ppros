@@ -14,11 +14,11 @@ use Carbon\Carbon;
 
 class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
 {
-    protected $month;
-    protected $year;
-    protected $ids;
+    protected ?int $month;
+    protected ?int $year;
+    protected ?array $ids;
 
-    public function __construct($month = null, $year = null, array $ids = null)
+    public function __construct(?int $month = null, ?int $year = null, ?array $ids = null)
     {
         $this->month = $month;
         $this->year = $year;
@@ -27,7 +27,7 @@ class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
 
     protected function query(): Collection
     {
-        $query = WorkOrder::with('tracking');
+        $query = WorkOrder::with(['tracking', 'masterProduct']);
 
         if (!empty($this->ids)) {
             return $query->whereIn('id', $this->ids)->latest()->get();
@@ -37,7 +37,8 @@ class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
             $workOrderIds = WorkOrderTracking::where('status_name', 'WO Diterima')
                 ->whereMonth('completed_at', $this->month)
                 ->whereYear('completed_at', $this->year)
-                ->pluck('work_order_id');
+                ->pluck('work_order_id')
+                ->toArray();
             $query->whereIn('id', $workOrderIds);
         }
 

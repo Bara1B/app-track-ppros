@@ -93,9 +93,10 @@
                 overmateInput.value = 'Memuat...';
 
                 try {
-                    // Ganti URL-nya biar dinamis
-                    const url = "{{ route('api.overmate.details', ['master' => ':id']) }}".replace(
-                        ':id', selectedId);
+                    // Bangun URL secara aman tanpa karakter yang di-encode
+                    const url = "{{ route('api.overmate.details', ['master' => 'PLACEHOLDER']) }}"
+                        .replace(
+                            'PLACEHOLDER', selectedId);
                     const response = await fetch(url);
 
                     if (!response.ok) {

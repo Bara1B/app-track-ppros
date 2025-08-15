@@ -38,7 +38,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="sequence" class="form-label">Nomor Urut WO</label>
                                     <input type="text" class="form-control @error('sequence') is-invalid @enderror"
-                                        id="sequence" name="sequence" required maxlength="3" placeholder="Contoh: 058">
+                                        id="sequence" name="sequence" required maxlength="3" placeholder="Contoh: 58">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="due_date" class="form-label">Due Date</label>

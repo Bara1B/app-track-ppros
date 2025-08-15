@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\Admin\StockOpnameController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\DevController;
 
 // Halaman utama & Auth
 Route::get('/', function () {
@@ -22,7 +23,6 @@ Auth::routes();
 // ===================================================================
 Route::middleware(['auth'])->group(function () {
     // Rute yang bisa diakses SEMUA user
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Rute dashboard sekarang jadi lebih dinamis
     Route::get('/dashboard/{status?}', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -50,8 +50,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/work-orders/tracking/{tracking}/update-date', [WorkOrderController::class, 'updateTrackingDate'])->name('work-orders.tracking.update-date');
 
     Route::post('/work-orders/tracking/{tracking}/complete', [WorkOrderController::class, 'completeStep'])->name('work-orders.tracking.complete');
-
-    Route::put('/work-orders/tracking/{tracking}/update-date', [WorkOrderController::class, 'updateTrackingDate'])->name('work-orders.tracking.update-date');
 });
 
 // ===================================================================
@@ -85,4 +83,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Settings
     Route::get('/settings/wo', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/settings/wo', [SettingController::class, 'update'])->name('settings.update');
+    Route::delete('/settings/wo/reset', [SettingController::class, 'reset'])->name('settings.reset');
 });
+
+// Hapus API dev auto refresh - gunakan Vite HMR

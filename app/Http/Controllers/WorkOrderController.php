@@ -63,13 +63,13 @@ class WorkOrderController extends Controller
 
         $workOrder->update($updateData);
 
-        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order berhasil di-update!');
+        return redirect(route('dashboard'))->with('success', 'Work Order berhasil di-update!');
     }
 
     public function destroy(WorkOrder $workOrder)
     {
         $workOrder->delete();
-        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order berhasil dihapus!');
+        return redirect(route('dashboard'))->with('success', 'Work Order berhasil dihapus!');
     }
 
     // Method store() yang sudah ada ...
@@ -180,7 +180,8 @@ class WorkOrderController extends Controller
 
         Log::info('--- PROSES SELESAI, MENGARAHKAN KEMBALI KE BROWSER ---');
 
-        return back()->with('success', "Status '{$tracking->status_name}' berhasil diverifikasi!");
+        return redirect()->to(url()->previous() . '#track-' . $tracking->id)
+            ->with('success', "Status '{$tracking->status_name}' berhasil diverifikasi!");
     }
 
     /**
@@ -246,7 +247,8 @@ class WorkOrderController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', $validated['quantity'] . ' Work Order baru berhasil dibuat!');
+        return redirect(route('dashboard'))
+            ->with('success', $validated['quantity'] . ' Work Order baru berhasil dibuat!');
     }
 
     public function bulkDestroy(Request $request)
@@ -260,7 +262,7 @@ class WorkOrderController extends Controller
         // Hapus semua WO yang ID-nya ada di dalem list
         WorkOrder::whereIn('id', $request->ids)->delete();
 
-        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Work Order yang dipilih berhasil dihapus.');
+        return redirect(route('dashboard'))->with('success', 'Work Order yang dipilih berhasil dihapus.');
     }
 
     public function bulkUpdateDueDate(Request $request)
@@ -275,19 +277,22 @@ class WorkOrderController extends Controller
             'due_date' => $validated['new_due_date'],
         ]);
 
-        return redirect(route('dashboard') . '#work-order-table')->with('success', 'Due date untuk Work Order yang dipilih berhasil di-update.');
+        return redirect(route('dashboard'))->with('success', 'Due date untuk Work Order yang dipilih berhasil di-update.');
     }
 
     public function updateTrackingDate(Request $request, WorkOrderTracking $tracking)
     {
         $validated = $request->validate([
             'completed_date' => 'required|date',
+            'notes' => 'nullable|string|max:255',
         ]);
 
         $tracking->update([
             'completed_at' => $validated['completed_date'],
+            'notes' => $validated['notes'] ?? $tracking->notes, // Keep existing notes if not provided
         ]);
 
-        return back()->with('success', 'Tanggal untuk ' . $tracking->status_name . ' berhasil di-update.');
+        return redirect()->to(url()->previous() . '#track-' . $tracking->id)
+            ->with('success', 'Data tracking untuk ' . $tracking->status_name . ' berhasil di-update.');
     }
 }

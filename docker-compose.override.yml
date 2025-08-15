@@ -1,17 +1,11 @@
 version: '3'
 services:
-    nginx:
-        image: nginx:alpine
-        container_name: nginx-ssl
-        ports:
-            - "443:443"
-        volumes:
-            - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-            - ./.docker/certs:/etc/nginx/ssl:ro
-        depends_on:
-            - laravel.test
-        networks:
-            - sail
+    # Tidak perlu nginx atau app container; hanya MySQL dan phpMyAdmin
+    # File ini sengaja dikosongkan agar tidak override apapun
+    noop:
+        image: hello-world
+        deploy:
+            replicas: 0
 
 networks:
     sail:

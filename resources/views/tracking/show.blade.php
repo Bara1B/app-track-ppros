@@ -34,7 +34,8 @@
 
                 <ol class="timeline-stepper">
                     @foreach ($workOrder->tracking as $status)
-                        <li class="timeline-step @if ($status->completed_at) completed @endif">
+                        <li id="track-{{ $status->id }}"
+                            class="timeline-step @if ($status->completed_at) completed @endif">
                             <div class="d-flex justify-content-between align-items-start flex-wrap">
                                 <div class="mb-2">
                                     <div class="timeline-step-title">{{ $status->status_name }}</div>
@@ -47,21 +48,40 @@
                                                 {{ \Carbon\Carbon::parse($status->completed_at)->translatedFormat('l, d M Y') }}
                                                 @if (Auth::user()->role == 'admin')
                                                     <button class="btn btn-link btn-sm p-0 ms-1 edit-date-btn"
-                                                        data-id="{{ $status->id }}" title="Edit Tanggal">✏️</button>
+                                                        data-id="{{ $status->id }}"
+                                                        title="Edit Tanggal & Keterangan">✏️</button>
                                                 @endif
                                             </div>
                                             @if (Auth::user()->role == 'admin')
                                                 <form id="edit-form-{{ $status->id }}"
                                                     action="{{ route('work-orders.tracking.update-date', $status) }}"
-                                                    method="POST" class="d-none mt-1">
+                                                    method="POST" class="d-none mt-2">
                                                     @csrf
                                                     @method('PUT')
-                                                    <div class="input-group input-group-sm" style="max-width: 300px;">
-                                                        <input type="date" name="completed_date" class="form-control"
-                                                            value="{{ \Carbon\Carbon::parse($status->completed_at)->format('Y-m-d') }}">
-                                                        <button type="submit" class="btn btn-success">Simpan</button>
-                                                        <button type="button" class="btn btn-secondary cancel-edit-btn"
-                                                            data-id="{{ $status->id }}">Batal</button>
+                                                    <div class="row g-2">
+                                                        <div class="col-auto">
+                                                            <label class="form-label small mb-1">Tanggal:</label>
+                                                            <input type="date" name="completed_date"
+                                                                class="form-control form-control-sm"
+                                                                value="{{ \Carbon\Carbon::parse($status->completed_at)->format('Y-m-d') }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="form-label small mb-1">Keterangan:</label>
+                                                            <input type="text" name="notes"
+                                                                class="form-control form-control-sm"
+                                                                value="{{ $status->notes }}"
+                                                                placeholder="Tambahkan keterangan...">
+                                                        </div>
+                                                        <div class="col-auto d-flex align-items-end">
+                                                            <div class="btn-group">
+                                                                <button type="submit"
+                                                                    class="btn btn-success btn-sm">Simpan</button>
+                                                                <button type="button"
+                                                                    class="btn btn-secondary btn-sm cancel-edit-btn"
+                                                                    data-id="{{ $status->id }}">Batal</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </form>
                                             @endif

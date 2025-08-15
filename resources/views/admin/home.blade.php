@@ -85,6 +85,75 @@
             </div>
         </div>
 
+        {{-- Navigation Cards --}}
+        <div class="row g-4 mb-4">
+            {{-- Card WO Tracking --}}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 nav-card"
+                    onclick="window.location.href='{{ route('dashboard') }}'">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h5 class="fw-bold text-primary mb-2">Work Order Tracking</h5>
+                                <p class="text-muted mb-3">Kelola dan pantau semua work order mulai dari pembuatan hingga
+                                    penyelesaian. Lacak status progres setiap tahapan produksi.</p>
+                                <span class="btn btn-gradient-primary">
+                                    <span class="me-2">→</span>Kelola Work Order
+                                </span>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div
+                                    class="nav-card-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-inline-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Card Stock Opname --}}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 nav-card"
+                    onclick="window.location.href='{{ route('stock-opname.index') }}'">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h5 class="fw-bold text-success mb-2">Stock Opname</h5>
+                                <p class="text-muted mb-3">Kelola inventaris dan tentukan status stock produk apakah masuk
+                                    kategori overmate atau tidak. Pantau ketersediaan stock secara real-time.</p>
+                                <span class="btn btn-gradient-success">
+                                    <span class="me-2">→</span>Kelola Stock Opname
+                                </span>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div
+                                    class="nav-card-icon bg-success bg-opacity-10 text-success rounded-3 p-3 d-inline-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                        </path>
+                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Grafik --}}
         <div class="card shadow-sm dashboard-card">
             <div class="card-body">
@@ -101,6 +170,114 @@
     </div>
 @endsection
 
+@push('styles')
+    <style>
+        .nav-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .nav-card-icon {
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover .nav-card-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-card .btn {
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover .btn {
+            transform: translateX(5px);
+        }
+
+        .nav-card .btn span:first-child {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .nav-card:hover .btn span:first-child {
+            transform: translateX(3px);
+        }
+
+        /* Gradient Button Styles */
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 50%, #084298 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gradient-primary:hover {
+            background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 50%, #052c65 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+            color: white;
+        }
+
+        .btn-gradient-success {
+            background: linear-gradient(135deg, #198754 0%, #146c43 50%, #0f5132 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gradient-success:hover {
+            background: linear-gradient(135deg, #157347 0%, #146c43 50%, #0d5b3e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
+            color: white;
+        }
+
+        /* Gradient Button Shine Effect */
+        .btn-gradient-primary::before,
+        .btn-gradient-success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-gradient-primary:hover::before,
+        .btn-gradient-success:hover::before {
+            left: 100%;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+    </style>
+@endpush
+
 @push('scripts')
     {{-- Pustaka Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -113,7 +290,51 @@
                     .then(response => response.json())
                     .then(data => {
                         new Chart(ctx, {
-                            /* ... konfigurasi chart ... */
+                            type: 'line',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                    label: 'Total WO',
+                                    data: data.data,
+                                    tension: 0.4,
+                                    fill: true,
+                                    backgroundColor: function(context) {
+                                        const chart = context.chart;
+                                        const {
+                                            ctx,
+                                            chartArea
+                                        } = chart;
+                                        if (!chartArea) return null;
+                                        const gradient = ctx.createLinearGradient(0,
+                                            chartArea.bottom, 0, chartArea.top);
+                                        gradient.addColorStop(0, 'rgba(0, 86, 160, 0)');
+                                        gradient.addColorStop(1, 'rgba(0, 86, 160, 0.6)');
+                                        return gradient;
+                                    },
+                                    borderColor: 'rgba(0, 86, 160, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(0, 86, 160, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(0, 86, 160, 1)'
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
                         });
                     });
             }

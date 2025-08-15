@@ -53,9 +53,6 @@
 
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-phapros">Login</button>
-                                {{-- ================================================ --}}
-                                {{--    LINK BARU DITAMBAHIN DI SINI, BRO           --}}
-                                {{-- ================================================ --}}
                                 @if (Route::has('register'))
                                     <div class="text-center mt-3">
                                         <p class="text-muted">Belum punya akun? <a href="{{ route('register') }}"><b>Daftar

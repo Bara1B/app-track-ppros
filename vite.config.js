@@ -11,24 +11,37 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/sass/app.scss',
                 'resources/css/tracking.css',
+                'resources/css/custom-table.css',
                 'resources/js/app.js',
             ],
-            refresh: true,
+            refresh: [
+                'resources/views/**',
+                'resources/js/**',
+                'resources/css/**',
+                'resources/sass/**',
+                'routes/**',
+                'app/**',
+            ],
         }),
     ],
-    // Konfigurasi dev server agar cocok dengan HTTPS lokal
     server: {
-        host: '0.0.0.0',
+        // bind ke 127.0.0.1 agar origin cocok dengan http://127.0.0.1:8000
+        host: '127.0.0.1',
         port: 5173,
-        origin: 'https://localhost:5173',
-        https: {
-            key: fs.readFileSync('/etc/nginx/ssl/localhost+2-key.pem'),
-            cert: fs.readFileSync('/etc/nginx/ssl/localhost+2.pem'),
-        },
+        cors: true,
+        https: process.env.APP_URL?.startsWith('https') ? (
+            fs.existsSync('/etc/nginx/ssl/localhost+2-key.pem') && fs.existsSync('/etc/nginx/ssl/localhost+2.pem')
+                ? {
+                    key: fs.readFileSync('/etc/nginx/ssl/localhost+2-key.pem'),
+                    cert: fs.readFileSync('/etc/nginx/ssl/localhost+2.pem'),
+                }
+                : false
+        ) : false,
         hmr: {
-            protocol: 'wss',
-            host: 'localhost',
+            protocol: process.env.APP_URL?.startsWith('https') ? 'wss' : 'ws',
+            host: '127.0.0.1',
             port: 5173,
         },
+        watch: { usePolling: true, interval: 300 },
     },
 });

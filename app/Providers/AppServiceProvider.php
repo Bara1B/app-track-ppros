@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Pagination\Paginator;    
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Paksa semua URL pake HTTPS kalo app-nya lagi ga di lokal
-        if (config('app.env') === 'production') {
+        // Paksa HTTPS jika APP_URL menggunakan skema https
+        $appUrl = (string) config('app.url');
+        if (str_starts_with($appUrl, 'https://')) {
             URL::forceScheme('https');
         }
 

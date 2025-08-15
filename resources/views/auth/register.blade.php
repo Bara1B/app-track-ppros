@@ -4,7 +4,7 @@
     <div class="split-screen-container">
         {{-- SISI KIRI: BRANDING & GAMBAR --}}
         <div class="split-screen-left">
-            <img src="{{ asset('images/logo-phapros.png') }}" alt="Phapros Logo" class="split-screen-logo"
+            <img src="{{ asset('images/logoPhapros.png') }}" alt="Phapros Logo" class="split-screen-logo"
                 style="filter: brightness(0) invert(1);">
             <h1 class="fw-bold mb-3">Sistem Pelacakan Work Order</h1>
             <p class="lead">Meningkatkan efisiensi dan kualitas untuk masa depan yang lebih sehat.</p>

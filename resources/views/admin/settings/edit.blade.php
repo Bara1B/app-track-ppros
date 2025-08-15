@@ -28,6 +28,24 @@
                                 <button class="btn btn-primary" type="submit">Simpan</button>
                             </div>
                         </form>
+
+                        <hr class="my-4">
+                        <h6 class="text-danger mb-3">Reset Semua Tabel (Danger Zone)</h6>
+                        <form method="POST" action="{{ route('settings.reset') }}"
+                            onsubmit="return confirm('Tindakan ini akan menghapus semua data dan mengembalikan ke kondisi awal. Lanjutkan?')">
+                            @csrf
+                            @method('DELETE')
+                            <div class="mb-3">
+                                <label class="form-label">Ketik <strong>HAPUS</strong> untuk konfirmasi</label>
+                                <input type="text" name="confirm"
+                                    class="form-control @error('confirm') is-invalid @enderror" placeholder="HAPUS"
+                                    required>
+                                @error('confirm')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <button type="submit" class="btn btn-danger">Reset Database</button>
+                        </form>
                     </div>
                 </div>
             </div>
