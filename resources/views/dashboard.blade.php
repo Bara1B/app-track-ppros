@@ -56,7 +56,10 @@
 
                         {{-- Panel Filter --}}
                         <div class="p-3 mb-4 filter-panel">
-                            <form action="{{ route('dashboard') }}" method="GET">
+                            <form action="{{ route('dashboard', $status ? ['status' => $status] : []) }}" method="GET">
+                                @if($status)
+                                    <input type="hidden" name="route_status" value="{{ $status }}">
+                                @endif
                                 <div class="row g-3 align-items-end">
                                     <div class="col-md-3">
                                         <label for="search" class="form-label fw-bold">Pencarian</label>
@@ -68,10 +71,10 @@
                                         <select name="filter_status" id="filter_status" class="form-select">
                                             <option value="">Semua Status</option>
                                             <option value="On Progress"
-                                                {{ request('filter_status') == 'On Progress' ? 'selected' : '' }}>On
+                                                {{ (request('filter_status') == 'On Progress' || $status == 'On Progress') ? 'selected' : '' }}>On
                                                 Progress</option>
                                             <option value="Completed"
-                                                {{ request('filter_status') == 'Completed' ? 'selected' : '' }}>
+                                                {{ (request('filter_status') == 'Completed' || $status == 'Completed') ? 'selected' : '' }}>
                                                 Completed
                                             </option>
                                         </select>
@@ -106,7 +109,7 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12 text-end">
-                                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Reset</a>
+                                        <a href="{{ route('dashboard', $status ? ['status' => $status] : []) }}" class="btn btn-outline-secondary">Reset</a>
                                         <button class="btn btn-primary" type="submit">Filter</button>
                                     </div>
                                 </div>
@@ -156,6 +159,12 @@
                                                         'sort_by' => $column,
                                                         'sort_direction' => $newDirection,
                                                     ]);
+                                                    
+                                                    // Jika ada status dari route, tambahkan ke URL
+                                                    if (isset($status) && $status) {
+                                                        $url = $url . '&status=' . $status;
+                                                    }
+                                                    
                                                     // Menambahkan jangkar ke URL
                                                     return '<th><a href="' .
                                                         $url .
@@ -550,6 +559,11 @@
                         if (checkedIds.length > 0) {
                             checkedIds.forEach(id => params.append('ids[]', id));
                         }
+
+                        // Tambahkan status filter jika ada
+                        @if(isset($status) && $status)
+                        params.set('status', '{{ $status }}');
+                        @endif
 
                         window.location.href = baseUrl + (params.toString() ? ('?' + params.toString()) : '');
                     });

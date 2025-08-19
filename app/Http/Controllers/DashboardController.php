@@ -68,9 +68,17 @@ class DashboardController extends Controller
             });
         }
 
-        // Filter berdasarkan status
-        if ($request->filled('filter_status')) {
+        // Filter berdasarkan status - prioritaskan status dari route parameter, lalu dari request
+        if ($request->filled('route_status')) {
+            // Jika ada route_status dari form, gunakan itu
+            $query->where('status', $request->route_status);
+        } elseif ($status && $status !== 'On Progress') {
+            $query->where('status', $status);
+        } elseif ($request->filled('filter_status')) {
             $query->where('status', $request->filter_status);
+        } elseif ($status === 'On Progress') {
+            // Jika status dari route adalah 'On Progress', filter berdasarkan status tersebut
+            $query->where('status', 'On Progress');
         }
 
         // Filter berdasarkan jatuh tempo
@@ -109,7 +117,7 @@ class DashboardController extends Controller
         }
 
         $workOrders = $query->paginate(10)->withQueryString();
-        return view('dashboard', compact('workOrders'));
+        return view('dashboard', compact('workOrders', 'status'));
     }
 
     /**
@@ -120,16 +128,18 @@ class DashboardController extends Controller
         $request->validate([
             'month' => 'nullable|integer|between:1,12',
             'year'  => 'nullable|integer|min:2000',
-            'ids'   => 'nullable|array'
+            'ids'   => 'nullable|array',
+            'status' => 'nullable|string|in:On Progress,Completed'
         ]);
 
         $ids = $request->query('ids');
         $month = $request->query('month');
         $year = $request->query('year');
+        $status = $request->query('status');
 
         $fileName = 'work_orders_' . date('Y-m-d') . '.xlsx';
 
-        return Excel::download(new WorkOrdersExport($month, $year, $ids), $fileName);
+        return Excel::download(new WorkOrdersExport($month, $year, $ids, $status), $fileName);
     }
 
     public function home()
