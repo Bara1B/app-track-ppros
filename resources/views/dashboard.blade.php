@@ -1,5 +1,28 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+    /* Custom styles for submenu and status indicators */
+    .nav-link.active {
+        background-color: rgba(0, 123, 255, 0.1);
+        border-left: 3px solid #007bff;
+    }
+    
+    .status-filter-indicator {
+        border-left: 4px solid #17a2b8;
+    }
+    
+    .submenu-item {
+        padding-left: 2rem;
+        font-size: 0.9rem;
+    }
+    
+    .submenu-item:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -68,10 +91,10 @@
                                         <select name="filter_status" id="filter_status" class="form-select">
                                             <option value="">Semua Status</option>
                                             <option value="On Progress"
-                                                {{ request('filter_status') == 'On Progress' ? 'selected' : '' }}>On
+                                                {{ (request('filter_status') == 'On Progress' || $status == 'On Progress') ? 'selected' : '' }}>On
                                                 Progress</option>
                                             <option value="Completed"
-                                                {{ request('filter_status') == 'Completed' ? 'selected' : '' }}>
+                                                {{ (request('filter_status') == 'Completed' || $status == 'Completed') ? 'selected' : '' }}>
                                                 Completed
                                             </option>
                                         </select>
@@ -112,6 +135,40 @@
                                 </div>
                             </form>
                         </div>
+
+                        {{-- Status Filter Indicator --}}
+                        @if(in_array($status, ['On Progress', 'Completed']))
+                            <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 16v-4"></path>
+                                    <path d="M12 8h.01"></path>
+                                </svg>
+                                <div>
+                                    <strong>Filter Status Aktif:</strong> 
+                                    @if($status == 'On Progress')
+                                        <span class="badge bg-warning text-dark">On Progress</span> - Menampilkan Work Order yang sedang dalam pengerjaan
+                                    @elseif($status == 'Completed')
+                                        <span class="badge bg-success">Completed</span> - Menampilkan Work Order yang sudah selesai
+                                    @endif
+                                    <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-secondary ms-2">Reset Filter</a>
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- Debug Information (only for development) --}}
+                        @if(config('app.debug'))
+                            <div class="alert alert-secondary mb-3" role="alert">
+                                <small>
+                                    <strong>Debug Info:</strong><br>
+                                    Current Status: <code>{{ $status }}</code><br>
+                                    Route Status: <code>{{ request()->route('status') }}</code><br>
+                                    Filter Status: <code>{{ request('filter_status') }}</code><br>
+                                    Total Work Orders: <code>{{ $workOrders->total() }}</code><br>
+                                    Current Page: <code>{{ $workOrders->currentPage() }}</code>
+                                </small>
+                            </div>
+                        @endif
 
                         {{-- Form Aksi Massal & Tabel --}}
                         <form id="bulk-actions-form" action="{{ route('work-orders.bulk-destroy') }}" method="POST">
@@ -242,6 +299,27 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            {{-- Show helpful message when no work orders found for specific status --}}
+                            @if($workOrders->count() == 0 && in_array($status, ['On Progress', 'Completed']))
+                                <div class="text-center py-4">
+                                    <div class="mb-3">
+                                        @if($status == 'On Progress')
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M12 6v6l4 2"></path>
+                                            </svg>
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
+                                        @endif
+                                    </div>
+                                    <h5 class="text-muted">Tidak ada Work Order dengan status "{{ $status }}"</h5>
+                                    <p class="text-muted">Coba ubah filter atau <a href="{{ route('dashboard') }}">lihat semua Work Order</a></p>
+                                </div>
+                            @endif
                         </form>
                         <div class="mt-3">
                             {{ $workOrders->links() }}
@@ -383,6 +461,17 @@
                 } catch (e) {
                     // no-op if storage is unavailable
                 }
+
+                // Handle submenu state for admin users
+                const currentPath = window.location.pathname;
+                const workorderSubmenu = document.getElementById('workorder-submenu');
+                if (workorderSubmenu) {
+                    // Check if current page is a status-filtered dashboard
+                    if (currentPath.includes('/On Progress') || currentPath.includes('/Completed')) {
+                        workorderSubmenu.classList.add('show');
+                    }
+                }
+
                 // Skrip untuk Grafik
                 const ctx = document.getElementById('monthlyWoChart');
                 if (ctx) {

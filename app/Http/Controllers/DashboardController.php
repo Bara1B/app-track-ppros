@@ -59,6 +59,11 @@ class DashboardController extends Controller
         // Logika untuk admin
         $query = WorkOrder::with('woDiterimaTracking');
 
+        // Filter berdasarkan status dari route parameter (jika ada)
+        if (in_array($status, ['On Progress', 'Completed'])) {
+            $query->where('status', $status);
+        }
+
         // Filter berdasarkan pencarian
         if ($request->filled('search')) {
             $search = $request->search;
@@ -68,7 +73,7 @@ class DashboardController extends Controller
             });
         }
 
-        // Filter berdasarkan status
+        // Filter berdasarkan status dari form (jika ada)
         if ($request->filled('filter_status')) {
             $query->where('status', $request->filter_status);
         }
@@ -109,7 +114,7 @@ class DashboardController extends Controller
         }
 
         $workOrders = $query->paginate(10)->withQueryString();
-        return view('dashboard', compact('workOrders'));
+        return view('dashboard', compact('workOrders', 'status'));
     }
 
     /**
