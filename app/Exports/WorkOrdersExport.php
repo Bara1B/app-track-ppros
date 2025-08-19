@@ -17,12 +17,14 @@ class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
     protected ?int $month;
     protected ?int $year;
     protected ?array $ids;
+    protected ?string $status;
 
-    public function __construct(?int $month = null, ?int $year = null, ?array $ids = null)
+    public function __construct(?int $month = null, ?int $year = null, ?array $ids = null, ?string $status = null)
     {
         $this->month = $month;
         $this->year = $year;
         $this->ids = $ids;
+        $this->status = $status;
     }
 
     protected function query(): Collection
@@ -31,6 +33,11 @@ class WorkOrdersExport implements FromView, ShouldAutoSize, WithEvents
 
         if (!empty($this->ids)) {
             return $query->whereIn('id', $this->ids)->latest()->get();
+        }
+
+        // Filter berdasarkan status jika ada
+        if ($this->status) {
+            $query->where('status', $this->status);
         }
 
         if ($this->month && $this->year) {
