@@ -6,7 +6,7 @@
         <div class="split-screen-left">
             <img src="{{ asset('images/logoPhapros.png') }}" alt="Phapros Logo" class="split-screen-logo"
                 style="filter: brightness(0) invert(1);">
-            <h1 class="fw-bold mb-3">Sistem Pelacakan Work Order</h1>
+            <h1 class="fw-bold mb-3">Sistem SO Dan Tracking WO</h1>
             <p class="lead">Meningkatkan efisiensi dan kualitas untuk masa depan yang lebih sehat.</p>
         </div>
 

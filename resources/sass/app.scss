@@ -270,7 +270,7 @@ body::before {
 }
 
 .split-screen-left {
-    width: 62%;
+    width: 60%;
     background-image: linear-gradient(rgba(1, 74, 177, 0.983), rgba(0, 5, 99, 0.85)), url('https://images.unsplash.com/photo-1581093458791-9a6685b353b3?q=80&w=2070&auto-format&fit=crop');
     background-size: cover;
     background-position: center;
@@ -298,7 +298,7 @@ body::before {
 }
 
 .split-screen-right {
-    width: 38%;
+    width: 40%;
     display: flex;
     justify-content: center;
     align-items: center;

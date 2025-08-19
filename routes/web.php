@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductApiController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\Admin\StockOpnameController;
+use App\Http\Controllers\Admin\OvermateController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\DevController;
 
@@ -17,6 +18,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 Auth::routes();
+
+// Route untuk download template (bisa diakses tanpa login)
+Route::get('/stock-opname/download-template', [StockOpnameController::class, 'downloadTemplate'])->name('stock-opname.download-template');
 
 // ===================================================================
 // GRUP UNTUK SEMUA USER YANG SUDAH LOGIN (ADMIN & USER BIASA)
@@ -38,12 +42,18 @@ Route::middleware(['auth'])->group(function () {
     // Rute buat update due date borongan
     Route::put('/work-orders/bulk-update-due-date', [WorkOrderController::class, 'bulkUpdateDueDate'])->name('work-orders.bulk-update-due-date');
 
-    Route::resource('stock-opname', StockOpnameController::class);
+    // Stock Opname Routes
+    Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
+    Route::get('/stock-opname/upload', [StockOpnameController::class, 'create'])->name('stock-opname.create');
+    Route::post('/stock-opname/import', [StockOpnameController::class, 'import'])->name('stock-opname.import');
+    Route::get('/stock-opname/import-data/{fileId}', [StockOpnameController::class, 'importData'])->name('stock-opname.import-data');
+    Route::get('/stock-opname/data/{fileId}', [StockOpnameController::class, 'showData'])->name('stock-opname.show-data');
+    Route::put('/stock-opname/{id}/update-stok', [StockOpnameController::class, 'updateStokFisik'])->name('stock-opname.update-stok');
+    Route::delete('/stock-opname/delete-file/{fileId}', [StockOpnameController::class, 'deleteFile'])->name('stock-opname.delete-file');
 
-    Route::resource('stock-opname', StockOpnameController::class);
-
-    // Rute API buat ngambil detail overmate
-    Route::get('/api/overmate-details/{master}', [StockOpnameController::class, 'getOvermateDetails'])->name('api.overmate.details');
+    // Overmate Routes
+    Route::get('/overmate', [OvermateController::class, 'index'])->name('overmate.index');
+    Route::get('/overmate/{itemNumber}', [OvermateController::class, 'show'])->name('overmate.show');
 
     Route::get('/home', [DashboardController::class, 'home'])->name('home');
 
@@ -80,10 +90,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/api/charts/monthly-wo', [ChartController::class, 'monthlyWorkOrders'])->name('charts.monthly-wo');
 
+    // Admin Home
+    Route::get('/admin/home', [App\Http\Controllers\Admin\AdminHomeController::class, 'index'])->name('admin.home');
+
     // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings.index');
     Route::get('/settings/wo', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/settings/wo', [SettingController::class, 'update'])->name('settings.update');
     Route::delete('/settings/wo/reset', [SettingController::class, 'reset'])->name('settings.reset');
+
+    // User Management
+    Route::get('/settings/users', [SettingController::class, 'users'])->name('admin.settings.users');
+    Route::get('/settings/users/create', [SettingController::class, 'createUser'])->name('admin.settings.create-user');
+    Route::post('/settings/users', [SettingController::class, 'storeUser'])->name('admin.settings.store-user');
+    Route::get('/settings/users/{user}/edit', [SettingController::class, 'editUser'])->name('admin.settings.edit-user');
+    Route::put('/settings/users/{user}', [SettingController::class, 'updateUser'])->name('admin.settings.update-user');
+    Route::delete('/settings/users/{user}', [SettingController::class, 'destroyUser'])->name('admin.settings.destroy-user');
 });
 
 // Hapus API dev auto refresh - gunakan Vite HMR

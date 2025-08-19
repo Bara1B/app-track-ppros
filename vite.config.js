@@ -35,7 +35,12 @@ export default defineConfig({
                     key: fs.readFileSync('/etc/nginx/ssl/localhost+2-key.pem'),
                     cert: fs.readFileSync('/etc/nginx/ssl/localhost+2.pem'),
                 }
-                : false
+                : fs.existsSync('./docker/nginx/ssl/localhost+2-key.pem') && fs.existsSync('./docker/nginx/ssl/localhost+2.pem')
+                    ? {
+                        key: fs.readFileSync('./docker/nginx/ssl/localhost+2-key.pem'),
+                        cert: fs.readFileSync('./docker/nginx/ssl/localhost+2.pem'),
+                    }
+                    : false
         ) : false,
         hmr: {
             protocol: process.env.APP_URL?.startsWith('https') ? 'wss' : 'ws',

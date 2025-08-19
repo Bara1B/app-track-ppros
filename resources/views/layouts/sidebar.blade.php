@@ -70,13 +70,25 @@
                 Stock Opname
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('overmate.*') ? 'active' : '' }}"
+                href="{{ route('overmate.index') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18" />
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                </svg>
+                Master Overmate
+            </a>
+        </li>
     @else
         {{-- Menu untuk User Biasa --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tracking-submenu" role="button" aria-expanded="false"
                 aria-controls="tracking-submenu">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkOrder;
 use App\Models\User;
+use App\Models\Overmate;
+use App\Models\StockOpnameFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -138,6 +140,8 @@ class DashboardController extends Controller
             'on_progress_wo' => WorkOrder::where('status', 'On Progress')->count(),
             'completed_wo' => WorkOrder::where('status', 'Completed')->count(),
             'total_users' => User::count(),
+            'total_overmate' => Overmate::count(),
+            'total_excel_files' => StockOpnameFile::where('status', '!=', 'deleted')->count(),
         ];
 
         // Kirim data statistik ke view
