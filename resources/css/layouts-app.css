@@ -1,0 +1,92 @@
+/* Sidebar link colors */
+.sidebar a {
+    color: #374151 !important;
+    text-decoration: none !important;
+}
+
+.sidebar a:hover {
+    color: #111827 !important;
+}
+
+/* Remove bullets and spacing for any list in sidebar */
+.sidebar ul,
+.sidebar li {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Profile dropdown links */
+#profile-dropdown-menu a {
+    text-decoration: none !important;
+    color: #374151 !important;
+}
+
+#profile-dropdown-menu a:hover {
+    background-color: #f3f4f6 !important;
+    /* gray-100 */
+    color: #111827 !important;
+}
+
+/* Ensure navbar items (including profile) are visible and aligned right */
+.navbar .navbar-collapse {
+    display: flex !important;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Style untuk tombol toggle dark mode */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 24px;
+    position: relative;
+    width: 48px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 16px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+
+input:checked+.slider {
+    background-color: #007bff;
+}
+
+input:checked+.slider:before {
+    transform: translateX(24px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

@@ -1,10 +1,20 @@
 @extends('layouts.app')
 
+@push('styles')
+    @vite('resources/css/pages/overmate-index.css')
+@endpush
+
 @section('content')
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold">Master Data Overmate</h3>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 align-items-center">
+                @if (Auth::user() && Auth::user()->role === 'admin')
+                    <a href="{{ route('overmate.create') }}" class="btn btn-sm btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Tambah
+                    </a>
+                @endif
                 <span class="badge bg-info fs-6">Total: {{ number_format($overmates->total()) }} items</span>
             </div>
         </div>
@@ -61,7 +71,7 @@
                                 <th style="width: 35%;">Nama Bahan</th>
                                 <th style="width: 25%;">Manufacturer</th>
                                 <th style="width: 10%;">Overmate Qty</th>
-                                <th style="width: 10%;">Action</th>
+                                <th style="width: 12%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,10 +91,24 @@
                                         <span class="badge bg-info">{{ number_format($item->overmate_qty, 5) }}</span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('overmate.show', $item->item_number) }}"
-                                            class="btn btn-sm btn-outline-primary" title="Lihat Detail">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ route('overmate.show', $item->item_number) }}"
+                                                class="btn btn-sm btn-outline-primary" title="Lihat Detail">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            </a>
+                                            @if (Auth::user() && Auth::user()->role === 'admin')
+                                                <a href="{{ route('overmate.edit', $item->item_number) }}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path></svg>
+                                                </a>
+                                                <form action="{{ route('overmate.destroy', $item->item_number) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path></svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -165,39 +189,4 @@
     </div>
 @endsection
 
-@push('styles')
-    <style>
-        .dashboard-card {
-            border: none;
-            border-radius: 10px;
-        }
-
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            font-size: 0.875rem;
-            white-space: nowrap;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-        }
-
-        .table-responsive {
-            border-radius: 10px;
-        }
-
-        .form-control,
-        .form-select {
-            border-radius: 8px;
-        }
-
-        .btn {
-            border-radius: 8px;
-        }
-
-        .card {
-            border-radius: 10px;
-        }
-    </style>
-@endpush
+ 

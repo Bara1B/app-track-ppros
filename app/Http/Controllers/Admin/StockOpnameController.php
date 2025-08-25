@@ -8,6 +8,7 @@ use App\Models\Overmate;
 use App\Models\StockOpnameFile;
 use App\Imports\StockOpnameImport;
 use App\Exports\StockOpnameTemplateExport;
+use App\Exports\StockOpnameFilledExport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
@@ -155,6 +156,19 @@ class StockOpnameController extends Controller
     {
         $fileName = 'Template_Stock_Opname_' . date('Y-m-d_H-i-s') . '.xlsx';
         return Excel::download(new StockOpnameTemplateExport, $fileName);
+    }
+
+    /**
+     * Export data stock opname yang sudah terisi sesuai template (filled).
+     */
+    public function exportData($fileId)
+    {
+        $stockOpnameFile = StockOpnameFile::findOrFail($fileId);
+
+        $safeName = pathinfo($stockOpnameFile->original_name, PATHINFO_FILENAME);
+        $fileName = 'Stock_Opname_Filled_' . $safeName . '_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new StockOpnameFilledExport($fileId), $fileName);
     }
 
     /**

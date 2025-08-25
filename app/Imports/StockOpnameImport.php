@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\StockOpname;
+use App\Models\OvermateMaster;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
@@ -52,13 +53,33 @@ class StockOpnameImport implements ToModel, WithHeadingRow, WithBatchInserts, Wi
         }
 
         // Handle both new format and old format columns
+        $itemNumber = $row['item_number'] ?? '';
+        $lotSerial  = $row['lotserial'] ?? $row['serial'] ?? '';
+
+        // Sync manufacturer from Overmate master data when possible
+        $manufacturer = '';
+        if ($itemNumber) {
+            $omQuery = OvermateMaster::where('item_number', $itemNumber);
+            if ($lotSerial !== '') {
+                $omQuery = $omQuery->where('lot_serial', $lotSerial);
+            }
+            $om = $omQuery->first();
+            if (!$om) {
+                // fallback by item only
+                $om = OvermateMaster::where('item_number', $itemNumber)->first();
+            }
+            if ($om && !empty($om->manufacturer)) {
+                $manufacturer = $om->manufacturer;
+            }
+        }
+
         return new StockOpname([
             'file_id' => $this->fileId,
             'location_system' => $row['location_system'] ?? $row['location_actual'] ?? '',
-            'item_number' => $row['item_number'] ?? '',
+            'item_number' => $itemNumber,
             'description' => $row['description'] ?? '',
-            'manufacturer' => '', // Not in the new format, will be empty
-            'lot_serial' => $row['lotserial'] ?? $row['serial'] ?? '',
+            'manufacturer' => $manufacturer,
+            'lot_serial' => $lotSerial,
             'reference' => $row['reference'] ?? '',
             'quantity_on_hand' => (float) ($row['quantity_on_hand'] ?? 0),
             'stok_fisik' => !empty($row['stock_fisik']) ? (float) $row['stock_fisik'] : null,

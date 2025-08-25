@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\User;
-use App\Models\WorkOrder;
-use App\Models\WorkOrderTracking;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class SettingController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('name')->paginate(15);
+
         $stats = [
             'total_users' => User::count(),
             'admin_users' => User::where('role', 'admin')->count(),
@@ -28,9 +28,10 @@ class SettingController extends Controller
     public function edit()
     {
         $settings = [
-            'wo_tracking_enabled' => config('app.wo_tracking_enabled', true),
-            'stock_opname_enabled' => config('app.stock_opname_enabled', true),
-            'overmate_enabled' => config('app.overmate_enabled', true),
+            'wo_prefix' => Setting::getValue('wo_prefix', '86'),
+            'wo_tracking_enabled' => Setting::getValue('wo_tracking_enabled', true),
+            'stock_opname_enabled' => Setting::getValue('stock_opname_enabled', true),
+            'overmate_enabled' => Setting::getValue('overmate_enabled', true),
         ];
 
         return view('admin.settings.wo', compact('settings'));
@@ -39,20 +40,32 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $request->validate([
+            'wo_prefix' => 'required|string|max:10',
             'wo_tracking_enabled' => 'boolean',
             'stock_opname_enabled' => 'boolean',
             'overmate_enabled' => 'boolean',
         ]);
 
-        // Update settings logic here
-        // For now, just return success message
+        // Update WO prefix
+        Setting::setWOPrefix($request->wo_prefix);
+
+        // Update other settings
+        Setting::setValue('wo_tracking_enabled', $request->boolean('wo_tracking_enabled'), 'boolean', 'wo');
+        Setting::setValue('stock_opname_enabled', $request->boolean('stock_opname_enabled'), 'boolean', 'stock_opname');
+        Setting::setValue('overmate_enabled', $request->boolean('overmate_enabled'), 'boolean', 'overmate');
+
         return redirect()->route('settings.edit')
             ->with('success', 'Pengaturan berhasil diupdate!');
     }
 
     public function reset()
     {
-        // Reset settings logic here
+        // Reset to default values
+        Setting::setWOPrefix('86');
+        Setting::setValue('wo_tracking_enabled', true, 'boolean', 'wo');
+        Setting::setValue('stock_opname_enabled', true, 'boolean', 'stock_opname');
+        Setting::setValue('overmate_enabled', true, 'boolean', 'overmate');
+
         return redirect()->route('settings.edit')
             ->with('success', 'Pengaturan berhasil direset ke default!');
     }

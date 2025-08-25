@@ -48,12 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/stock-opname/import', [StockOpnameController::class, 'import'])->name('stock-opname.import');
     Route::get('/stock-opname/import-data/{fileId}', [StockOpnameController::class, 'importData'])->name('stock-opname.import-data');
     Route::get('/stock-opname/data/{fileId}', [StockOpnameController::class, 'showData'])->name('stock-opname.show-data');
+    Route::get('/stock-opname/export/{fileId}', [StockOpnameController::class, 'exportData'])->name('stock-opname.export-data');
     Route::put('/stock-opname/{id}/update-stok', [StockOpnameController::class, 'updateStokFisik'])->name('stock-opname.update-stok');
     Route::delete('/stock-opname/delete-file/{fileId}', [StockOpnameController::class, 'deleteFile'])->name('stock-opname.delete-file');
 
-    // Overmate Routes
+    // Overmate Routes (Public - accessible to all authenticated users)
     Route::get('/overmate', [OvermateController::class, 'index'])->name('overmate.index');
-    Route::get('/overmate/{itemNumber}', [OvermateController::class, 'show'])->name('overmate.show');
 
     Route::get('/home', [DashboardController::class, 'home'])->name('home');
 
@@ -66,8 +66,7 @@ Route::middleware(['auth'])->group(function () {
 // GRUP UNTUK RUTE KHUSUS ADMIN
 // ===================================================================
 Route::middleware(['auth', 'admin'])->group(function () {
-    // User Management
-    Route::resource('users', UserController::class);
+    // User Management - Removed standalone users route, now handled in settings
 
     // Work Order Management (Create, Update, Delete)
     Route::get('/work-orders/create', [WorkOrderController::class, 'create'])->name('work-orders.create');
@@ -93,11 +92,36 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin Home
     Route::get('/admin/home', [App\Http\Controllers\Admin\AdminHomeController::class, 'index'])->name('admin.home');
 
+    // Data Master Hub
+    Route::get('/data-master', function () {
+        return view('admin.data_master');
+    })->name('admin.data-master');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings.index');
     Route::get('/settings/wo', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/settings/wo', [SettingController::class, 'update'])->name('settings.update');
     Route::delete('/settings/wo/reset', [SettingController::class, 'reset'])->name('settings.reset');
+
+    // Overmate Master CRUD (Admin)
+    Route::get('/overmate/create', [OvermateController::class, 'create'])->name('overmate.create');
+    Route::post('/overmate', [OvermateController::class, 'store'])->name('overmate.store');
+    // More specific routes must come BEFORE the general catch-all route
+    Route::get('/overmate/{itemNumber}/edit', [OvermateController::class, 'editByItemNumber'])->name('overmate.edit');
+    Route::put('/overmate/{itemNumber}', [OvermateController::class, 'updateByItemNumber'])->name('overmate.update');
+    Route::delete('/overmate/{itemNumber}', [OvermateController::class, 'destroy'])->name('overmate.destroy');
+    // General catch-all route for show (must come LAST)
+    Route::get('/overmate/{itemNumber}', [OvermateController::class, 'show'])
+        ->where('itemNumber', '^(?!create$).+')->name('overmate.show');
+
+    // Work Order Data (Master Product) CRUD
+    Route::get('/work-orders/data', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'index'])->name('work-orders.data.index');
+    Route::get('/work-orders/data/create', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'create'])->name('work-orders.data.create');
+    Route::post('/work-orders/data', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'store'])->name('work-orders.data.store');
+    Route::get('/work-orders/data/{product}/edit', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'edit'])->name('work-orders.data.edit');
+    Route::put('/work-orders/data/{product}', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'update'])->name('work-orders.data.update');
+    Route::delete('/work-orders/data/{product}', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'destroy'])->name('work-orders.data.destroy');
+    Route::post('/work-orders/data/import', [\App\Http\Controllers\Admin\WorkOrderDataController::class, 'import'])->name('work-orders.data.import');
 
     // User Management
     Route::get('/settings/users', [SettingController::class, 'users'])->name('admin.settings.users');

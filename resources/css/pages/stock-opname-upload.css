@@ -1,0 +1,17 @@
+/* Stock Opname upload page styles */
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.alert {
+    border-radius: 8px;
+}

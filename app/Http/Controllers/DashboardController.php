@@ -6,6 +6,8 @@ use App\Models\WorkOrder;
 use App\Models\User;
 use App\Models\Overmate;
 use App\Models\StockOpnameFile;
+use App\Models\MasterProduct;
+use App\Models\StockOpname;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,6 +20,7 @@ class DashboardController extends Controller
     {
         // Jika yang login adalah pengguna biasa, berikan dasbor khusus
         if (Auth::user()->role == 'user') {
+            // Use the parameter if provided, otherwise use request parameter
             if (!in_array($status, ['On Progress', 'Completed'])) {
                 $status = 'On Progress';
             }
@@ -109,7 +112,16 @@ class DashboardController extends Controller
         }
 
         $workOrders = $query->paginate(10)->withQueryString();
-        return view('dashboard', compact('workOrders'));
+        
+        // Statistics for dashboard cards
+        $totalWorkOrders = WorkOrder::count();
+        $pendingWorkOrders = WorkOrder::where('status', 'On Progress')->count();
+        $completedWorkOrders = WorkOrder::where('status', 'Completed')->count();
+        $overdueWorkOrders = WorkOrder::where('due_date', '<', now()->today())
+            ->where('status', '!=', 'Completed')
+            ->count();
+        
+        return view('dashboard', compact('workOrders', 'totalWorkOrders', 'pendingWorkOrders', 'completedWorkOrders', 'overdueWorkOrders'));
     }
 
     /**
@@ -127,6 +139,11 @@ class DashboardController extends Controller
         $month = $request->query('month');
         $year = $request->query('year');
 
+        // Jika user memilih bulan tapi tidak memilih tahun, gunakan tahun berjalan
+        if ($month && !$year) {
+            $year = now()->year;
+        }
+
         $fileName = 'work_orders_' . date('Y-m-d') . '.xlsx';
 
         return Excel::download(new WorkOrdersExport($month, $year, $ids), $fileName);
@@ -142,6 +159,9 @@ class DashboardController extends Controller
             'total_users' => User::count(),
             'total_overmate' => Overmate::count(),
             'total_excel_files' => StockOpnameFile::where('status', '!=', 'deleted')->count(),
+            // Tambahan untuk ringkasan donut chart
+            'total_master_work_order' => MasterProduct::count(),
+            'total_stock_opname' => StockOpname::count(),
         ];
 
         // Kirim data statistik ke view

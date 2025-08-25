@@ -19,7 +19,7 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
             [
                 '1',
                 'BBE0121',
-                'V',
+                '✓',
                 '14303146',
                 'CITRUS BIOFLAV',
                 'Kg',
@@ -31,11 +31,12 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 '-2.1111', // Selisih (Quantity - Stock Fisik)
                 '', // Overmate - akan diisi sistem
                 'YA', // Masuk - akan diisi sistem
+                '', // Keterangan
             ],
             [
                 '2',
                 'BBE0121',
-                'V',
+                '✓',
                 '14303146',
                 'CITRUS BIOFLAV',
                 'Kg',
@@ -47,11 +48,12 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 '-14.2191', // Selisih
                 '', // Overmate
                 'YA', // Masuk
+                '', // Keterangan
             ],
             [
                 '3',
                 'BBE0122',
-                'V',
+                '✓',
                 '14319150',
                 'SODIUM ACETAT',
                 'Kg',
@@ -63,11 +65,12 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 '-18.3158', // Selisih
                 '', // Overmate
                 '', // Masuk
+                '', // Keterangan
             ],
             [
                 '4',
                 'BBE0122',
-                'V',
+                '✓',
                 '14303101',
                 'COCOA POWDER',
                 'Kg',
@@ -79,11 +82,12 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 '-78.2645', // Selisih
                 '', // Overmate
                 '', // Masuk
+                '', // Keterangan
             ],
             [
                 '5',
                 'BBE0122',
-                'V',
+                '✓',
                 '14309104',
                 'ISOSORBIDE 5-M',
                 'Kg',
@@ -95,6 +99,7 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 '-0.642', // Selisih
                 '', // Overmate
                 'YA', // Masuk
+                '', // Keterangan
             ],
         ];
     }
@@ -116,6 +121,7 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
             'Selisih', // Quantity - Stock Fisik
             'Overmate', // Akan diisi sistem
             'Masuk', // Akan diisi sistem
+            'Keterangan',
         ];
     }
 
@@ -136,6 +142,7 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
             'L' => 12,  // Selisih
             'M' => 12,  // Overmate
             'N' => 10,  // Masuk
+            'O' => 20,  // Keterangan
         ];
     }
 
@@ -158,9 +165,16 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
                 ],
             ],
             // Data rows
-            'A2:N100' => [
+            'A2:O100' => [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_LEFT,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+            ],
+            // Center ticks in Location Actual column
+            'C:C' => [
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
                     'vertical' => Alignment::VERTICAL_CENTER,
                 ],
             ],

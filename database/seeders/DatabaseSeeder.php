@@ -15,8 +15,10 @@ class DatabaseSeeder extends Seeder
         // Ini memastikan semua data pendukung sudah ada.
         $this->call([
             MasterProductSeeder::class,
-            // UsersTableSeeder::class, // Tidak perlu dipanggil jika user sudah dibuat di sini
             OvermateMasterSeeder::class,
+            OvermateSeeder::class,
+            // UsersTableSeeder::class, // Tidak perlu dipanggil jika user sudah dibuat di sini
+            SettingsSeeder::class,
         ]);
 
         // 2. Buat user admin/biasa HANYA JIKA BELUM ADA

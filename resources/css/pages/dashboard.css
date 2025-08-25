@@ -1,0 +1,21 @@
+/* Dashboard scoped overrides */
+#dashboard-wo th a {
+    text-decoration: none !important;
+    color: #111827 !important; /* gray-900 */
+}
+#dashboard-wo th a:hover {
+    text-decoration: none !important;
+    color: #111827 !important;
+}
+#dashboard-wo a.no-underline {
+    text-decoration: none !important;
+}
+/* Force pill radius for action buttons within dashboard */
+#dashboard-wo #actions-toolbar button,
+#dashboard-wo #actions-toolbar a,
+#dashboard-wo #bulk-actions-toolbar button,
+#dashboard-wo #bulk-actions-toolbar a,
+#exportModal .border-t button,
+#editDueDateModal .border-t button {
+    border-radius: 9999px !important;
+}

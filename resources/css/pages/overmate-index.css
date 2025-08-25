@@ -1,0 +1,33 @@
+/* Overmate index page styles */
+.dashboard-card {
+    border: none;
+    border-radius: 10px;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.table-responsive {
+    border-radius: 10px;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.card {
+    border-radius: 10px;
+}

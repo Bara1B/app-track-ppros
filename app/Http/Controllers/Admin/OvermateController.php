@@ -49,7 +49,7 @@ class OvermateController extends Controller
     /**
      * Menampilkan detail overmate berdasarkan item number.
      */
-    public function show($itemNumber)
+    public function show(string $itemNumber)
     {
         $overmates = Overmate::where('item_number', $itemNumber)
             ->orderBy('manufactur')
@@ -61,5 +61,99 @@ class OvermateController extends Controller
 
         return view('overmate.show', compact('overmates', 'itemNumber'));
     }
-}
 
+    /**
+     * Form tambah Overmate.
+     */
+    public function create()
+    {
+        return view('overmate.create');
+    }
+
+    /**
+     * Simpan Overmate baru.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'item_number'  => ['required', 'string', 'max:255'],
+            'nama_bahan'   => ['required', 'string', 'max:255'],
+            'manufactur'   => ['required', 'string', 'max:255'],
+            'overmate_qty' => ['required', 'numeric'],
+        ]);
+
+        Overmate::create($validated);
+
+        return redirect()
+            ->route('overmate.index')
+            ->with('status', 'Data overmate berhasil ditambahkan.');
+    }
+
+    /**
+     * Hapus satu baris overmate (by item_number).
+     */
+    public function destroy(string $itemNumber)
+    {
+        $overmate = Overmate::where('item_number', $itemNumber)->firstOrFail();
+        $overmate->delete();
+
+        return redirect()
+            ->back()
+            ->with('status', 'Data overmate berhasil dihapus.');
+    }
+
+    /**
+     * Form edit Overmate.
+     */
+    public function edit(Overmate $overmate)
+    {
+        return view('overmate.edit', compact('overmate'));
+    }
+
+    /**
+     * Form edit Overmate by item_number.
+     */
+    public function editByItemNumber(string $itemNumber)
+    {
+        $overmate = Overmate::where('item_number', $itemNumber)->firstOrFail();
+        return view('overmate.edit', compact('overmate'));
+    }
+
+    /**
+     * Update Overmate.
+     */
+    public function update(Request $request, Overmate $overmate)
+    {
+        $validated = $request->validate([
+            'item_number'  => ['required', 'string', 'max:255'],
+            'nama_bahan'   => ['required', 'string', 'max:255'],
+            'manufactur'   => ['required', 'string', 'max:255'],
+            'overmate_qty' => ['required', 'numeric'],
+        ]);
+
+        $overmate->update($validated);
+
+        return redirect()->route('overmate.index')
+            ->with('status', 'Data overmate berhasil diperbarui.');
+    }
+
+    /**
+     * Update Overmate by item_number.
+     */
+    public function updateByItemNumber(Request $request, string $itemNumber)
+    {
+        $overmate = Overmate::where('item_number', $itemNumber)->firstOrFail();
+
+        $validated = $request->validate([
+            'item_number'  => ['required', 'string', 'max:255'],
+            'nama_bahan'   => ['required', 'string', 'max:255'],
+            'manufactur'   => ['required', 'string', 'max:255'],
+            'overmate_qty' => ['required', 'numeric'],
+        ]);
+
+        $overmate->update($validated);
+
+        return redirect()->route('overmate.index')
+            ->with('status', 'Data overmate berhasil diperbarui.');
+    }
+}

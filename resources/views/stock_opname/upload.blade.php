@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+    @vite('resources/css/pages/stock-opname-upload.css')
+@endpush
+
 @section('content')
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -129,23 +133,4 @@
     </script>
 @endpush
 
-@push('styles')
-    <style>
-        .card {
-            border: none;
-            border-radius: 10px;
-        }
-
-        .form-control {
-            border-radius: 8px;
-        }
-
-        .btn {
-            border-radius: 8px;
-        }
-
-        .alert {
-            border-radius: 8px;
-        }
-    </style>
-@endpush
+ 

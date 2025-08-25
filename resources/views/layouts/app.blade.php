@@ -5,71 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: http: https:; style-src 'self' 'unsafe-inline' http: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; img-src 'self' data: blob: http: https:; font-src 'self' data: http: https:; connect-src 'self' http: https: ws: wss:;">
     <link rel="icon" href="{{ asset('phapros-favicon.ico') }}" type="image/x-icon">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/tracking.css', 'resources/css/custom-table.css'])
+    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/css/tracking.css', 'resources/css/layouts-app.css', 'resources/css/custom-table.css'])
     @stack('styles')
-    <style>
-        /* Style untuk tombol toggle dark mode */
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .theme-switch {
-            display: inline-block;
-            height: 24px;
-            position: relative;
-            width: 48px;
-        }
-
-        .theme-switch input {
-            display: none;
-        }
-
-        .slider {
-            background-color: #ccc;
-            bottom: 0;
-            cursor: pointer;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: .4s;
-        }
-
-        .slider:before {
-            background-color: #fff;
-            bottom: 4px;
-            content: "";
-            height: 16px;
-            left: 4px;
-            position: absolute;
-            transition: .4s;
-            width: 16px;
-        }
-
-        input:checked+.slider {
-            background-color: #007bff;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(24px);
-        }
-
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
-        }
-    </style>
 </head>
 
 <body>
     <div id="app">
+        <!-- Global Loading Overlay (hidden by default) -->
+        <div id="global-loading"
+             class="hidden fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm items-center justify-center">
+            <div class="flex flex-col items-center gap-3 p-6 bg-white rounded-lg shadow-lg">
+                <!-- Spinner -->
+                <svg class="animate-spin h-8 w-8 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <p class="text-sm text-gray-700 font-medium">Memproses... Mohon tunggu</p>
+            </div>
+        </div>
         <div id="main-wrapper">
             <!-- Sidebar -->
             <aside class="sidebar">
@@ -92,7 +49,7 @@
                             </svg>
                         </button>
 
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto align-items-center">
                                 @guest
                                     @if (Route::has('login'))
@@ -116,12 +73,16 @@
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle fw-bold" href="#"
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle fw-bold d-flex align-items-center gap-2" href="#"
                                             role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false" v-pre>
-                                            {{ Auth::user()->name }}
+                                            <span class="rounded-circle d-inline-flex justify-content-center align-items-center"
+                                                style="width:28px;height:28px;background:linear-gradient(135deg,#6b7280,#374151);color:#fff;font-weight:700;font-size:.8rem;">
+                                                {{ strtoupper(substr(Auth::user()->name,0,1)) }}
+                                            </span>
+                                            <span style="color:#374151;">{{ Auth::user()->name }}</span>
                                         </a>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <div id="profile-dropdown-menu" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                             <a class="dropdown-item" href="{{ route('logout') }}"
                                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg"
@@ -156,6 +117,93 @@
     <script>
         // Logika untuk Dark Mode & Sidebar Toggle
         (function() {
+            // Loading Overlay helpers (improved)
+            const loadingEl = document.getElementById('global-loading');
+            let pendingShowTimer = null;
+            let maxHideTimer = null;
+
+            function reallyShow() {
+                if (!loadingEl) return;
+                loadingEl.classList.remove('hidden');
+                loadingEl.classList.add('flex');
+                // Fallback to inline style in case CSS classes are not present/applied yet
+                loadingEl.style.display = 'flex';
+                // Auto-hide fallback (3s) agar overlay tidak terasa lama
+                clearTimeout(maxHideTimer);
+                maxHideTimer = setTimeout(() => {
+                    hideLoading();
+                }, 3000);
+            }
+
+            function scheduleShow(delayMs = 200) {
+                clearTimeout(pendingShowTimer);
+                pendingShowTimer = setTimeout(() => {
+                    reallyShow();
+                }, delayMs);
+            }
+
+            function cancelScheduledShow() {
+                clearTimeout(pendingShowTimer);
+                pendingShowTimer = null;
+            }
+
+            function hideLoading() {
+                cancelScheduledShow();
+                clearTimeout(maxHideTimer);
+                if (!loadingEl) return;
+                loadingEl.classList.add('hidden');
+                loadingEl.classList.remove('flex');
+                // Hide via inline style as well
+                loadingEl.style.display = 'none';
+            }
+
+            // Expose for manual trigger/debugging
+            window.showGlobalLoading = () => scheduleShow(0);
+            window.hideGlobalLoading = hideLoading;
+
+            // Tampilkan loading pada submit form halaman manapun (dengan delayed show agar respons cepat tidak terasa lama)
+            document.addEventListener('submit', function() {
+                scheduleShow(300);
+            }, true);
+
+            // Tampilkan loading saat klik elemen dengan atribut data-loading (sedikit lebih cepat)
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('[data-loading]');
+                if (target) scheduleShow(200);
+            });
+
+            // Sembunyikan loading pada event halaman yang cepat muncul setelah navigasi/restore
+            window.addEventListener('DOMContentLoaded', hideLoading);
+            window.addEventListener('pageshow', hideLoading);
+            window.addEventListener('pagehide', hideLoading);
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') hideLoading();
+            });
+
+            // Batalkan show saat akan berpindah halaman
+            window.addEventListener('beforeunload', function() {
+                cancelScheduledShow();
+            });
+
+            // Axios interceptors (jika tersedia)
+            if (window.axios && window.axios.interceptors) {
+                window.axios.interceptors.request.use(function(config) {
+                    scheduleShow(200);
+                    return config;
+                }, function(error) {
+                    hideLoading();
+                    return Promise.reject(error);
+                });
+
+                window.axios.interceptors.response.use(function(response) {
+                    hideLoading();
+                    return response;
+                }, function(error) {
+                    hideLoading();
+                    return Promise.reject(error);
+                });
+            }
+
             // Logika Dark Mode
             const themeToggle = document.getElementById('theme-checkbox');
             const currentTheme = localStorage.getItem('theme');
@@ -240,6 +288,34 @@
                         }
                     });
                 });
+            }
+
+            // Toggle for Settings submenu in sidebar
+            const settingsSubmenu = document.getElementById('settings-submenu');
+            const settingsChevron = document.getElementById('settings-chevron');
+
+            function setChevron(state) {
+                if (!settingsChevron) return;
+                settingsChevron.style.transform = state === 'open' ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+
+            // Initialize chevron state based on submenu visibility
+            if (settingsSubmenu) {
+                const isHidden = settingsSubmenu.classList.contains('hidden');
+                setChevron(isHidden ? 'closed' : 'open');
+            }
+
+            // Expose toggle so it can be called from onclick in sidebar
+            window.toggleSettingsDropdown = function() {
+                if (!settingsSubmenu) return;
+                const isHidden = settingsSubmenu.classList.contains('hidden');
+                if (isHidden) {
+                    settingsSubmenu.classList.remove('hidden');
+                    setChevron('open');
+                } else {
+                    settingsSubmenu.classList.add('hidden');
+                    setChevron('closed');
+                }
             }
         })();
     </script>

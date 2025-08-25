@@ -1,0 +1,341 @@
+[90m= [39m[34;4mReflectionClass[39;24m {#5493
+    +[1mname[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+    [34mextends[39m: "[32mApp\Http\Controllers\Controller[39m",
+    [34mimplements[39m: [],
+    [34mconstants[39m: [],
+    [34mproperties[39m: [
+      "[34mmiddleware[39m" => [34;4mReflectionProperty[39;24m {#5500
+        +[1mname[22m: "[32mmiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+        [34mextra[39m: {
+          [34mdocComment[39m: """
+            [32m/**[39m\n
+            [32m     * The middleware registered on the controller.[39m\n
+            [32m     *[39m\n
+            [32m     * @var array[39m\n
+            [32m     */[39m
+            """,
+        },
+      },
+    ],
+    [34mmethods[39m: [
+      "[34mindex[39m" => [34;4mReflectionMethod[39;24m {#5506
+        +[1mname[22m: "[32mindex[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5552
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mshow[39m" => [34;4mReflectionMethod[39;24m {#5498
+        +[1mname[22m: "[32mshow[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$itemNumber[39m: [34;4mReflectionParameter[39;24m {#5545
+            +[1mname[22m: "[32mitemNumber[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mcreate[39m" => [34;4mReflectionMethod[39;24m {#5497
+        +[1mname[22m: "[32mcreate[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mstore[39m" => [34;4mReflectionMethod[39;24m {#5496
+        +[1mname[22m: "[32mstore[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5557
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mdestroy[39m" => [34;4mReflectionMethod[39;24m {#5525
+        +[1mname[22m: "[32mdestroy[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$overmate[39m: [34;4mReflectionParameter[39;24m {#5560
+            +[1mname[22m: "[32movermate[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mApp\Models\Overmate[39m",
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34medit[39m" => [34;4mReflectionMethod[39;24m {#5526
+        +[1mname[22m: "[32medit[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$overmate[39m: [34;4mReflectionParameter[39;24m {#5563
+            +[1mname[22m: "[32movermate[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mApp\Models\Overmate[39m",
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mupdate[39m" => [34;4mReflectionMethod[39;24m {#5527
+        +[1mname[22m: "[32mupdate[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Admin\OvermateController[39m",
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5566
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+          [34m$overmate[39m: [34;4mReflectionParameter[39;24m {#5567
+            +[1mname[22m: "[32movermate[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32mApp\Models\Overmate[39m",
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mmiddleware[39m" => [34;4mReflectionMethod[39;24m {#5528
+        +[1mname[22m: "[32mmiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$middleware[39m: [34;4mReflectionParameter[39;24m {#5570
+            +[1mname[22m: "[32mmiddleware[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$options[39m: [34;4mReflectionParameter[39;24m {#5571
+            +[1mname[22m: "[32moptions[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mgetMiddleware[39m" => [34;4mReflectionMethod[39;24m {#5529
+        +[1mname[22m: "[32mgetMiddleware[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mcallAction[39m" => [34;4mReflectionMethod[39;24m {#5530
+        +[1mname[22m: "[32mcallAction[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$method[39m: [34;4mReflectionParameter[39;24m {#5575
+            +[1mname[22m: "[32mmethod[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameters[39m: [34;4mReflectionParameter[39;24m {#5576
+            +[1mname[22m: "[32mparameters[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34m__call[39m" => [34;4mReflectionMethod[39;24m {#5531
+        +[1mname[22m: "[32m__call[39m",
+        +[1mclass[22m: "[32mIlluminate\Routing\Controller[39m",
+        [34mparameters[39m: {
+          [34m$method[39m: [34;4mReflectionParameter[39;24m {#5579
+            +[1mname[22m: "[32mmethod[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameters[39m: [34;4mReflectionParameter[39;24m {#5580
+            +[1mname[22m: "[32mparameters[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mauthorize[39m" => [34;4mReflectionMethod[39;24m {#5532
+        +[1mname[22m: "[32mauthorize[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$ability[39m: [34;4mReflectionParameter[39;24m {#5583
+            +[1mname[22m: "[32mability[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$arguments[39m: [34;4mReflectionParameter[39;24m {#5584
+            +[1mname[22m: "[32marguments[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mauthorizeForUser[39m" => [34;4mReflectionMethod[39;24m {#5533
+        +[1mname[22m: "[32mauthorizeForUser[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$user[39m: [34;4mReflectionParameter[39;24m {#5587
+            +[1mname[22m: "[32muser[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$ability[39m: [34;4mReflectionParameter[39;24m {#5588
+            +[1mname[22m: "[32mability[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$arguments[39m: [34;4mReflectionParameter[39;24m {#5589
+            +[1mname[22m: "[32marguments[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mparseAbilityAndArguments[39m" => [34;4mReflectionMethod[39;24m {#5534
+        +[1mname[22m: "[32mparseAbilityAndArguments[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$ability[39m: [34;4mReflectionParameter[39;24m {#5592
+            +[1mname[22m: "[32mability[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$arguments[39m: [34;4mReflectionParameter[39;24m {#5593
+            +[1mname[22m: "[32marguments[39m",
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mnormalizeGuessedAbilityName[39m" => [34;4mReflectionMethod[39;24m {#5535
+        +[1mname[22m: "[32mnormalizeGuessedAbilityName[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$ability[39m: [34;4mReflectionParameter[39;24m {#5596
+            +[1mname[22m: "[32mability[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mauthorizeResource[39m" => [34;4mReflectionMethod[39;24m {#5536
+        +[1mname[22m: "[32mauthorizeResource[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$model[39m: [34;4mReflectionParameter[39;24m {#5599
+            +[1mname[22m: "[32mmodel[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameter[39m: [34;4mReflectionParameter[39;24m {#5600
+            +[1mname[22m: "[32mparameter[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mdefault[39m: [36mnull[39m,
+          },
+          [34m$options[39m: [34;4mReflectionParameter[39;24m {#5601
+            +[1mname[22m: "[32moptions[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5602
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m3[39m,
+            [34mdefault[39m: [36mnull[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mresourceAbilityMap[39m" => [34;4mReflectionMethod[39;24m {#5537
+        +[1mname[22m: "[32mresourceAbilityMap[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mresourceMethodsWithoutModels[39m" => [34;4mReflectionMethod[39;24m {#5538
+        +[1mname[22m: "[32mresourceMethodsWithoutModels[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+      "[34mvalidateWith[39m" => [34;4mReflectionMethod[39;24m {#5539
+        +[1mname[22m: "[32mvalidateWith[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$validator[39m: [34;4mReflectionParameter[39;24m {#5607
+            +[1mname[22m: "[32mvalidator[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5608
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+            [34mdefault[39m: [36mnull[39m,
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mvalidate[39m" => [34;4mReflectionMethod[39;24m {#5540
+        +[1mname[22m: "[32mvalidate[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5611
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+          [34m$rules[39m: [34;4mReflectionParameter[39;24m {#5612
+            +[1mname[22m: "[32mrules[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+          },
+          [34m$messages[39m: [34;4mReflectionParameter[39;24m {#5613
+            +[1mname[22m: "[32mmessages[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+          [34m$attributes[39m: [34;4mReflectionParameter[39;24m {#5614
+            +[1mname[22m: "[32mattributes[39m",
+            [34mposition[39m: [35m3[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mvalidateWithBag[39m" => [34;4mReflectionMethod[39;24m {#5541
+        +[1mname[22m: "[32mvalidateWithBag[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mparameters[39m: {
+          [34m$errorBag[39m: [34;4mReflectionParameter[39;24m {#5617
+            +[1mname[22m: "[32merrorBag[39m",
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#5618
+            +[1mname[22m: "[32mrequest[39m",
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: "[32mIlluminate\Http\Request[39m",
+          },
+          [34m$rules[39m: [34;4mReflectionParameter[39;24m {#5619
+            +[1mname[22m: "[32mrules[39m",
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+          },
+          [34m$messages[39m: [34;4mReflectionParameter[39;24m {#5620
+            +[1mname[22m: "[32mmessages[39m",
+            [34mposition[39m: [35m3[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+          [34m$attributes[39m: [34;4mReflectionParameter[39;24m {#5621
+            +[1mname[22m: "[32mattributes[39m",
+            [34mposition[39m: [35m4[39m,
+            [34mtypeHint[39m: "[32marray[39m",
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: "[32mpublic[39m",
+      },
+      "[34mgetValidationFactory[39m" => [34;4mReflectionMethod[39;24m {#5542
+        +[1mname[22m: "[32mgetValidationFactory[39m",
+        +[1mclass[22m: "[32mApp\Http\Controllers\Controller[39m",
+        [34mmodifiers[39m: "[32mprotected[39m",
+      },
+    ],
+  }
+

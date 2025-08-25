@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite';
+import { config as loadEnv } from 'dotenv';
+loadEnv();
 
 export default defineConfig({
     plugins: [
@@ -21,31 +23,49 @@ export default defineConfig({
                 'resources/sass/**',
                 'routes/**',
                 'app/**',
+                'database/migrations/**',
             ],
         }),
     ],
     server: {
-        // bind ke 127.0.0.1 agar origin cocok dengan http://127.0.0.1:8000
-        host: '127.0.0.1',
-        port: 5173,
+        // gunakan localhost agar cocok dengan https://localhost dan sertifikat dev
+        host: 'localhost',
+        port: 5174,
         cors: true,
         https: process.env.APP_URL?.startsWith('https') ? (
-            fs.existsSync('/etc/nginx/ssl/localhost+2-key.pem') && fs.existsSync('/etc/nginx/ssl/localhost+2.pem')
-                ? {
-                    key: fs.readFileSync('/etc/nginx/ssl/localhost+2-key.pem'),
-                    cert: fs.readFileSync('/etc/nginx/ssl/localhost+2.pem'),
-                }
-                : fs.existsSync('./docker/nginx/ssl/localhost+2-key.pem') && fs.existsSync('./docker/nginx/ssl/localhost+2.pem')
-                    ? {
-                        key: fs.readFileSync('./docker/nginx/ssl/localhost+2-key.pem'),
-                        cert: fs.readFileSync('./docker/nginx/ssl/localhost+2.pem'),
+            (() => {
+                try {
+                    // Prefer project certs first when running Vite on host
+                    if (
+                        fs.existsSync('./docker/nginx/ssl/localhost+2-key.pem') &&
+                        fs.existsSync('./docker/nginx/ssl/localhost+2.pem')
+                    ) {
+                        return {
+                            key: fs.readFileSync('./docker/nginx/ssl/localhost+2-key.pem'),
+                            cert: fs.readFileSync('./docker/nginx/ssl/localhost+2.pem'),
+                        };
                     }
-                    : false
+                    // Fallback to container path if accessible
+                    if (
+                        fs.existsSync('/etc/nginx/ssl/localhost+2-key.pem') &&
+                        fs.existsSync('/etc/nginx/ssl/localhost+2.pem')
+                    ) {
+                        return {
+                            key: fs.readFileSync('/etc/nginx/ssl/localhost+2-key.pem'),
+                            cert: fs.readFileSync('/etc/nginx/ssl/localhost+2.pem'),
+                        };
+                    }
+                } catch (e) {
+                    // ignore and fallback below
+                }
+                // Let Vite generate a self-signed cert if none available
+                return true;
+            })()
         ) : false,
         hmr: {
             protocol: process.env.APP_URL?.startsWith('https') ? 'wss' : 'ws',
-            host: '127.0.0.1',
-            port: 5173,
+            host: 'localhost',
+            port: 5174,
         },
         watch: { usePolling: true, interval: 300 },
     },

@@ -11,10 +11,40 @@
                 <a href="{{ route('stock-opname.index') }}" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Kembali ke List File
                 </a>
+                <a href="{{ route('stock-opname.export-data', $stockOpnameFile->id) }}" class="btn btn-success">
+                    <i class="fas fa-file-excel me-2"></i>Export Excel (Filled)
+                </a>
                 <button type="button" class="btn btn-danger"
                     onclick="deleteFile({{ $stockOpnameFile->id }}, '{{ $stockOpnameFile->original_name }}')">
                     <i class="fas fa-trash me-2"></i>Hapus File
                 </button>
+            </div>
+        </div>
+        
+        {{-- Horizontal card info untuk file yang diupload --}}
+        <div class="card shadow-sm mb-4 overflow-hidden">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded" style="width:56px;height:56px;">
+                    <i class="fas fa-file-excel"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <h5 class="mb-0">{{ $stockOpnameFile->original_name }}</h5>
+                        <span class="badge bg-light text-muted fw-normal">ID: {{ $stockOpnameFile->id }}</span>
+                    </div>
+                    <div class="text-muted small mt-1">
+                        Diunggah: {{ optional($stockOpnameFile->created_at)->format('d M Y, H:i') }}
+                        @if(isset($stockOpnames))
+                            <span class="mx-2">•</span>
+                            Total baris: {{ method_exists($stockOpnames, 'total') ? $stockOpnames->total() : $stockOpnames->count() }}
+                        @endif
+                    </div>
+                </div>
+                <div class="d-none d-md-block text-end">
+                    <a href="{{ route('stock-opname.export-data', $stockOpnameFile->id) }}" class="btn btn-sm btn-success">
+                        <i class="fas fa-file-excel me-1"></i> Export
+                    </a>
+                </div>
             </div>
         </div>
 

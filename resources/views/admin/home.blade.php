@@ -1,107 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-4">
-        <h3 class="fw-bold mb-4">Selamat Datang, {{ Auth::user()->name }}!</h3>
+    <div class="container mx-auto px-4 py-6">
+        <h3 class="text-2xl font-bold mb-6">Selamat Datang, {{ Auth::user()->name }}!</h3>
 
-        {{-- Kartu Statistik --}}
-        <div class="row g-4 mb-4">
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                            </svg>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Total Work Order</h6>
-                            <h4 class="fw-bold mb-0">{{ $stats['total_wo'] ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-success bg-opacity-10 text-success p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Completed</h6>
-                            <h4 class="fw-bold mb-0">{{ $stats['completed_wo'] ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">On Going</h6>
-                            <h4 class="fw-bold mb-0">{{ $stats['ongoing_wo'] ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-info bg-opacity-10 text-info p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Total Pengguna</h6>
-                            <h4 class="fw-bold mb-0">{{ $stats['total_users'] ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         {{-- Navigation Cards --}}
         <div class="row g-4 mb-4">
             {{-- Card WO Tracking --}}
             <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100 nav-card"
+                <div class="card border-0 shadow-sm h-100 nav-card min-h-[260px]"
                     onclick="window.location.href='{{ route('dashboard') }}'">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-8">
+                    <div class="card-body p-4 md:min-h-[240px]">
+                        <div class="flex items-stretch">
+                            <div class="w-8/12 flex flex-col h-full">
                                 <h5 class="fw-bold text-primary mb-2">Work Order Tracking</h5>
-                                <p class="text-muted mb-3">Kelola dan pantau semua work order mulai dari pembuatan hingga
-                                    penyelesaian. Lacak status progres setiap tahapan produksi.</p>
-                                <span class="btn btn-gradient-primary">
-                                    <span class="me-2">→</span>Kelola Work Order
-                                </span>
+                                <div class="text-muted desc">
+                                    Kelola dan pantau semua work order mulai dari pembuatan hingga penyelesaian. Lacak
+                                    status progres setiap tahapan produksi.
+                                </div>
+                                <div class="flex-1"></div>
+                                <div class="mt-4 border-t border-gray-100 pt-3">
+                                    <span
+                                        class="inline-flex items-center px-4 py-2 rounded-md text-white font-semibold shadow bg-gradient-to-r from-blue-600 via-blue-600 to-blue-800 transition-transform hover:translate-x-1 hover:shadow-lg select-none">
+                                        <span class="me-2">→</span>Kelola Work Order
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="w-4/12 flex items-center justify-end text-end">
                                 <div
                                     class="nav-card-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-inline-flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
@@ -122,19 +49,25 @@
 
             {{-- Card Stock Opname --}}
             <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100 nav-card"
+                <div class="card border-0 shadow-sm h-100 nav-card min-h-[260px]"
                     onclick="window.location.href='{{ route('stock-opname.index') }}'">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-8">
+                    <div class="card-body p-4 md:min-h-[240px]">
+                        <div class="flex items-stretch">
+                            <div class="w-8/12 flex flex-col h-full">
                                 <h5 class="fw-bold text-success mb-2">Stock Opname</h5>
-                                <p class="text-muted mb-3">Kelola inventaris dan tentukan status stock produk apakah masuk
-                                    kategori overmate atau tidak. Pantau ketersediaan stock secara real-time.</p>
-                                <span class="btn btn-gradient-success">
-                                    <span class="me-2">→</span>Kelola Stock Opname
-                                </span>
+                                <div class="text-muted desc">
+                                    Kelola inventaris dan tentukan status stock produk apakah masuk kategori overmate atau
+                                    tidak. Pantau ketersediaan stock secara real-time.
+                                </div>
+                                <div class="flex-1"></div>
+                                <div class="mt-4 border-t border-gray-100 pt-3">
+                                    <span
+                                        class="inline-flex items-center px-4 py-2 rounded-md text-white font-semibold shadow bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-800 transition-transform hover:translate-x-1 hover:shadow-lg select-none">
+                                        <span class="me-2">→</span>Kelola Stock Opname
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="w-4/12 flex items-center justify-end text-end">
                                 <div
                                     class="nav-card-icon bg-success bg-opacity-10 text-success rounded-3 p-3 d-inline-flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
@@ -156,21 +89,27 @@
 
         {{-- Additional Cards Row --}}
         <div class="row g-4 mb-4">
-            {{-- Card Master Overmate --}}
+            {{-- Card Data Master --}}
             <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100 nav-card"
-                    onclick="window.location.href='{{ route('overmate.index') }}'">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-8">
-                                <h5 class="fw-bold text-info mb-2">Master Overmate</h5>
-                                <p class="text-muted mb-3">Data master bahan dan overmate quantity untuk referensi sistem
-                                    stock opname. Kelola 346+ records data.</p>
-                                <span class="btn btn-gradient-info">
-                                    <span class="me-2">→</span>Kelola Master Data
-                                </span>
+                <div class="card border-0 shadow-sm h-100 nav-card min-h-[260px]"
+                    onclick="window.location.href='{{ route('admin.data-master') }}'">
+                    <div class="card-body p-4 md:min-h-[240px]">
+                        <div class="flex items-stretch">
+                            <div class="w-8/12 flex flex-col h-full">
+                                <h5 class="fw-bold text-info mb-2">Data Master</h5>
+                                <div class="text-muted desc">
+                                    Kumpulan data master untuk referensi sistem, termasuk Overmate dan Work Order (Master
+                                    Product). Kelola dan telusuri data acuan produksi.
+                                </div>
+                                <div class="flex-1"></div>
+                                <div class="mt-4 border-t border-gray-100 pt-3">
+                                    <span
+                                        class="inline-flex items-center px-4 py-2 rounded-md text-white font-semibold shadow bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-700 transition-transform hover:translate-x-1 hover:shadow-lg select-none">
+                                        <span class="me-2">→</span>Kelola Master Data
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="w-4/12 flex items-center justify-end text-end">
                                 <div class="nav-card-icon bg-info bg-opacity-10 text-info rounded-3 p-3 d-inline-flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -187,19 +126,24 @@
 
             {{-- Card Settings --}}
             <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100 nav-card"
+                <div class="card border-0 shadow-sm h-100 nav-card min-h-[260px]"
                     onclick="window.location.href='{{ route('admin.settings.index') }}'">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-8">
+                    <div class="card-body p-4 md:min-h-[240px]">
+                        <div class="flex items-stretch">
+                            <div class="w-8/12 flex flex-col h-full">
                                 <h5 class="fw-bold text-warning mb-2">Settings & User Management</h5>
-                                <p class="text-muted mb-3">Konfigurasi sistem, pengaturan user, role management, dan
-                                    konfigurasi aplikasi lainnya.</p>
-                                <span class="btn btn-gradient-warning">
-                                    <span class="me-2">→</span>Kelola Settings
-                                </span>
+                                <div class="text-muted desc">
+                                    Konfigurasi sistem, pengaturan user, role management, dan konfigurasi aplikasi lainnya.
+                                </div>
+                                <div class="flex-1"></div>
+                                <div class="mt-4 border-t border-gray-100 pt-3">
+                                    <span
+                                        class="inline-flex items-center px-4 py-2 rounded-md text-white font-semibold shadow bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 transition-transform hover:translate-x-1 hover:shadow-lg select-none">
+                                        <span class="me-2">→</span>Kelola Settings
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="w-4/12 flex items-center justify-end text-end">
                                 <div
                                     class="nav-card-icon bg-warning bg-opacity-10 text-warning rounded-3 p-3 d-inline-flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
@@ -218,288 +162,232 @@
             </div>
         </div>
 
-        {{-- Grafik --}}
-        <div class="card shadow-sm dashboard-card">
+        {{-- Grafik Ringkasan (Donut) --}}
+        <div class="card shadow-sm dashboard-card mb-5">
             <div class="card-body">
                 <div class="mb-4 mt-4">
                     <div class="mx-auto" style="max-width: 900px;">
-                        <h5 class="fw-bold text-center mb-3">Total Work Order per Bulan ({{ now()->year }})</h5>
+                        <h5 class="fw-bold text-center mb-3">Ringkasan Data</h5>
                         <div class="p-3 border rounded">
-                            <canvas id="monthlyWoChart"></canvas>
+                            <div class="relative w-full h-72">
+                                <canvas id="summaryDonutChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Card Tambahan --}}
-        <div class="row g-4 mt-4">
-            {{-- Card Overmate Master --}}
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-purple bg-opacity-10 text-purple p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M20 7L10 17l-5-5"></path>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
-                                <path d="M16 5h6v6"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Total Data Overmate Master</h6>
-                            <h4 class="fw-bold mb-0 text-purple">{{ $stats['total_overmate'] ?? 0 }}</h4>
-                            <small class="text-muted">Record data master overmate</small>
+        {{-- Work Order Stats Grouped Card --}}
+        <div class="card border-0 shadow-sm mb-5">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="fw-bold mb-0">Work Order</h5>
+                </div>
+                <div class="row g-5">
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-indigo-50 text-indigo-600 p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Data Master Work Order</h6>
+                                    <h4 class="fw-bold mb-0">{{ $stats['total_master_work_order'] ?? 0 }}</h4>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-blue-50 text-blue-600 p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Work Order</h6>
+                                    <h4 class="fw-bold mb-0">{{ $stats['total_wo'] ?? 0 }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-green-50 text-green-600 p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Completed</h6>
+                                    <h4 class="fw-bold mb-0">{{ $stats['completed_wo'] ?? 0 }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-yellow-50 text-yellow-600 p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z">
+                                        </path>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">On Going</h6>
+                                    <h4 class="fw-bold mb-0">{{ $stats['on_progress_wo'] ?? 0 }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
 
-            {{-- Card Excel Files --}}
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="bg-success bg-opacity-10 text-success p-3 rounded-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <path d="M8 13h8"></path>
-                                <path d="M8 17h8"></path>
-                                <path d="M10 9H8v2h2V9z"></path>
-                            </svg>
+        {{-- Stock Opname Grouped Card (Bottom Section) --}}
+        <div class="card border-0 shadow-sm mb-5">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="fw-bold mb-0">Stock Opname</h5>
+                </div>
+                <div class="row g-3 mt-1">
+                    {{-- Tile Overmate Master --}}
+                    <div class="col-12 col-md-6">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-purple bg-opacity-10 text-purple p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 12h18"></path>
+                                        <path d="M3 6h18"></path>
+                                        <path d="M3 18h18"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Data Overmate Master</h6>
+                                    <h4 class="fw-bold mb-0 text-purple">{{ $stats['total_overmate'] ?? 0 }}</h4>
+                                    <small class="text-muted">Record data master overmate</small>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-muted mb-1">File Excel Uploaded</h6>
-                            <h4 class="fw-bold mb-0 text-success">{{ $stats['total_excel_files'] ?? 0 }}</h4>
-                            <small class="text-muted">Total file .xlsx yang diupload</small>
+                    </div>
+
+                    {{-- Tile Excel Files --}}
+                    <div class="col-12 col-md-6">
+                        <div class="bg-white border rounded-3 h-100">
+                            <div class="p-4 d-flex align-items-center gap-3">
+                                <div class="bg-success bg-opacity-10 text-success p-3 rounded-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <path d="M8 13h8"></path>
+                                        <path d="M8 17h8"></path>
+                                        <path d="M10 9H8v2h2V9z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">File Excel Uploaded</h6>
+                                    <h4 class="fw-bold mb-0 text-success">{{ $stats['total_excel_files'] ?? 0 }}</h4>
+                                    <small class="text-muted">Total file .xlsx yang diupload</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@push('styles')
-    <style>
-        .nav-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-        }
+    @push('styles')
+        @vite('resources/css/admin-home.css')
+    @endpush
 
-        .nav-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-        }
+    @push('scripts')
+        {{-- Pustaka Chart.js --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Donut chart ringkasan total
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('summaryDonutChart');
+                if (!ctx) return;
 
-        .nav-card-icon {
-            transition: all 0.3s ease;
-        }
+                const dataValues = [
+                    {{ $stats['total_master_work_order'] ?? 0 }},
+                    {{ $stats['total_overmate'] ?? 0 }},
+                    {{ $stats['total_stock_opname'] ?? 0 }},
+                    {{ $stats['total_wo'] ?? 0 }}
+                ];
 
-        .nav-card:hover .nav-card-icon {
-            transform: scale(1.1);
-        }
-
-        .nav-card .btn {
-            transition: all 0.3s ease;
-        }
-
-        .nav-card:hover .btn {
-            transform: translateX(5px);
-        }
-
-        .nav-card .btn span:first-child {
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
-
-        .nav-card:hover .btn span:first-child {
-            transform: translateX(3px);
-        }
-
-        /* Gradient Button Styles */
-        .btn-gradient-primary {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 50%, #084298 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-gradient-primary:hover {
-            background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 50%, #052c65 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
-            color: white;
-        }
-
-        .btn-gradient-success {
-            background: linear-gradient(135deg, #198754 0%, #146c43 50%, #0f5132 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-gradient-success:hover {
-            background: linear-gradient(135deg, #157347 0%, #146c43 50%, #0d5b3e 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
-            color: white;
-        }
-
-        .btn-gradient-info {
-            background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 50%, #087990 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-gradient-info:hover {
-            background: linear-gradient(135deg, #0bb5d4 0%, #0aa2c0 50%, #087990 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 202, 240, 0.4);
-            color: white;
-        }
-
-        .btn-gradient-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #e0a800 50%, #b8860b 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-gradient-warning:hover {
-            background: linear-gradient(135deg, #e0a800 0%, #d39e00 50%, #b8860b 100%);
-            transform: translateY(-2px);
-        }
-
-        /* Custom Colors */
-        .bg-purple {
-            background-color: #6f42c1 !important;
-        }
-
-        .text-purple {
-            color: #6f42c1 !important;
-        }
-
-        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
-        color: white;
-        }
-
-        /* Gradient Button Shine Effect */
-        .btn-gradient-primary::before,
-        .btn-gradient-success::before,
-        .btn-gradient-info::before,
-        .btn-gradient-warning::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-gradient-primary:hover::before,
-        .btn-gradient-success:hover::before,
-        .btn-gradient-info:hover::before,
-        .btn-gradient-warning:hover::before {
-            left: 100%;
-        }
-
-        .nav-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-card:hover::before {
-            left: 100%;
-        }
-    </style>
-@endpush
-
-@push('scripts')
-    {{-- Pustaka Chart.js --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Skrip untuk Grafik (tidak berubah)
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('monthlyWoChart');
-            if (ctx) {
-                fetch("{{ route('charts.monthly-wo') }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: data.labels,
-                                datasets: [{
-                                    label: 'Total WO',
-                                    data: data.data,
-                                    tension: 0.4,
-                                    fill: true,
-                                    backgroundColor: function(context) {
-                                        const chart = context.chart;
-                                        const {
-                                            ctx,
-                                            chartArea
-                                        } = chart;
-                                        if (!chartArea) return null;
-                                        const gradient = ctx.createLinearGradient(0,
-                                            chartArea.bottom, 0, chartArea.top);
-                                        gradient.addColorStop(0, 'rgba(0, 86, 160, 0)');
-                                        gradient.addColorStop(1, 'rgba(0, 86, 160, 0.6)');
-                                        return gradient;
-                                    },
-                                    borderColor: 'rgba(0, 86, 160, 1)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: 'rgba(0, 86, 160, 1)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverBackgroundColor: '#fff',
-                                    pointHoverBorderColor: 'rgba(0, 86, 160, 1)'
-                                }]
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Master Work Order', 'Master Overmate', 'Stock Opname', 'Work Order'],
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.8)', // blue-500
+                                'rgba(139, 92, 246, 0.8)', // purple-500
+                                'rgba(16, 185, 129, 0.8)', // emerald-500
+                                'rgba(251, 191, 36, 0.8)' // amber-400
+                            ],
+                            borderColor: [
+                                'rgba(59, 130, 246, 1)',
+                                'rgba(139, 92, 246, 1)',
+                                'rgba(16, 185, 129, 1)',
+                                'rgba(251, 191, 36, 1)'
+                            ],
+                            borderWidth: 2,
+                            hoverOffset: 6,
+                            cutout: '60%'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true
+                                }
                             },
-                            options: {
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    }
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: false
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        return `${context.label}: ${value}`;
                                     }
                                 }
                             }
-                        });
-                    });
-            }
-        });
-    </script>
-@endpush
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush

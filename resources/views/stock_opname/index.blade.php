@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+    @vite('resources/css/pages/stock-opname-index.css')
+@endpush
+
 @section('content')
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -50,72 +54,54 @@
             </div>
             <div class="card-body">
                 @if ($uploadedFiles->count() > 0)
-                    <div class="row g-4">
+                    <div class="row g-3">
                         @foreach ($uploadedFiles as $file)
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 file-card" style="cursor: pointer;"
-                                    onclick="window.location.href='{{ route('stock-opname.show-data', $file->id) }}'">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="file-icon me-3">
+                            <div class="col-12">
+                                <div class="card file-card" style="cursor: pointer;"
+                                     onclick="window.location.href='{{ route('stock-opname.show-data', $file->id) }}'">
+                                    <div class="card-body d-flex align-items-center gap-3 flex-wrap">
+                                        <div class="file-icon">
+                                            @if ($file->status === 'uploaded')
+                                                <i class="fas fa-file-excel fa-lg text-warning"></i>
+                                            @elseif ($file->status === 'imported')
+                                                <i class="fas fa-check-circle fa-lg text-success"></i>
+                                            @else
+                                                <i class="fas fa-file fa-lg text-secondary"></i>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1 min-w-0">
+                                            <div class="d-flex align-items-center flex-wrap gap-2">
+                                                <h6 class="mb-0 text-truncate" style="max-width: 380px;"
+                                                    title="{{ $file->original_name }}">{{ $file->original_name }}</h6>
                                                 @if ($file->status === 'uploaded')
-                                                    <i class="fas fa-file-excel fa-2x text-warning"></i>
+                                                    <span class="badge bg-warning">Menunggu Import</span>
                                                 @elseif ($file->status === 'imported')
-                                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                                    <span class="badge bg-success">Sudah Diimport</span>
                                                 @else
-                                                    <i class="fas fa-file fa-2x text-secondary"></i>
+                                                    <span class="badge bg-secondary">{{ ucfirst($file->status) }}</span>
                                                 @endif
                                             </div>
-                                            <div class="flex-grow-1">
-                                                <h6 class="card-title mb-1 text-truncate"
-                                                    title="{{ $file->original_name }}">
-                                                    {{ $file->original_name }}
-                                                </h6>
-                                                <small class="text-muted">
-                                                    {{ \Carbon\Carbon::parse($file->created_at)->format('d/m/Y H:i') }}
-                                                </small>
+                                            <div class="text-muted small mt-1">
+                                                {{ \Carbon\Carbon::parse($file->created_at)->format('d/m/Y H:i') }}
+                                                <span class="mx-2">•</span>
+                                                Ukuran {{ number_format($file->file_size / 1024, 1) }} KB
                                             </div>
                                         </div>
-
-                                        <div class="file-info mb-3">
-                                            <div class="row text-center">
-                                                <div class="col-6">
-                                                    <small class="text-muted d-block">Ukuran</small>
-                                                    <strong>{{ number_format($file->file_size / 1024, 1) }} KB</strong>
-                                                </div>
-                                                <div class="col-6">
-                                                    <small class="text-muted d-block">Status</small>
-                                                    @if ($file->status === 'uploaded')
-                                                        <span class="badge bg-warning">Menunggu Import</span>
-                                                    @elseif ($file->status === 'imported')
-                                                        <span class="badge bg-success">Sudah Diimport</span>
-                                                    @else
-                                                        <span class="badge bg-secondary">{{ ucfirst($file->status) }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="file-actions">
+                                        <div class="d-flex ms-auto gap-2 flex-wrap">
                                             @if ($file->status === 'uploaded')
-                                                <button type="button" class="btn btn-success btn-sm w-100 mb-2"
+                                                <button type="button" class="btn btn-success btn-sm"
                                                     onclick="event.stopPropagation(); importData({{ $file->id }}, '{{ $file->original_name }}')">
-                                                    <i class="fas fa-download me-1"></i>
-                                                    Import Data
+                                                    <i class="fas fa-download me-1"></i> Import Data
                                                 </button>
                                             @elseif ($file->status === 'imported')
-                                                <button type="button" class="btn btn-primary btn-sm w-100 mb-2"
+                                                <button type="button" class="btn btn-primary btn-sm"
                                                     onclick="event.stopPropagation(); window.location.href='{{ route('stock-opname.show-data', $file->id) }}'">
-                                                    <i class="fas fa-eye me-1"></i>
-                                                    Lihat Data
+                                                    <i class="fas fa-eye me-1"></i> Lihat Data
                                                 </button>
                                             @endif
-
-                                            <!-- Delete Button -->
-                                            <button type="button" class="btn btn-danger btn-sm w-100"
+                                            <button type="button" class="btn btn-danger btn-sm"
                                                 onclick="event.stopPropagation(); deleteFile({{ $file->id }}, '{{ $file->original_name }}')">
-                                                <i class="fas fa-trash me-1"></i>
-                                                Hapus File
+                                                <i class="fas fa-trash me-1"></i> Hapus File
                                             </button>
                                         </div>
                                     </div>
@@ -218,47 +204,4 @@
     </script>
 @endpush
 
-@push('styles')
-    <style>
-        .file-card {
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
-        }
-
-        .file-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border-color: #007bff;
-        }
-
-        .file-icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            background: rgba(0, 123, 255, 0.1);
-        }
-
-        .file-info {
-            border-top: 1px solid #e9ecef;
-            padding-top: 15px;
-        }
-
-        .file-actions {
-            border-top: 1px solid #e9ecef;
-            padding-top: 15px;
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
-            border-bottom: 1px solid #e3e6f0;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            padding: 0.5em 0.75em;
-        }
-    </style>
-@endpush
+ 

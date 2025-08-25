@@ -87,10 +87,10 @@ class WorkOrderController extends Controller
         $product = \App\Models\MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
 
         // 2. Prefix tahun untuk nomor WO bisa diubah via setting UI
-        $year = optional(\App\Models\Setting::where('key', 'wo_year_prefix')->first())->value ?: '86';
+        $prefix = \App\Models\Setting::getValue('wo_prefix', '86');
         $suffix = substr($product->item_number, -1);
         $paddedSequence = str_pad((string) $validated['sequence'], 3, '0', STR_PAD_LEFT);
-        $woNumber = $year . $validated['product_kode'] . $paddedSequence . $suffix;
+        $woNumber = $prefix . $validated['product_kode'] . $paddedSequence . $suffix;
 
         // 3. Cek lagi kalo nomor WO ini udah ada, biar makin aman
         $isExist = \App\Models\WorkOrder::where('wo_number', $woNumber)->exists();
@@ -206,8 +206,9 @@ class WorkOrderController extends Controller
         ]);
 
         $product = MasterProduct::where('kode', $validated['product_kode'])->firstOrFail();
-        $year = optional(\App\Models\Setting::where('key', 'wo_year_prefix')->first())->value ?: '86';
+        $prefix = \App\Models\Setting::getValue('wo_prefix', '86');
         $suffix = substr($product->item_number, -1);
+
         $trackingSteps = [
             'WO Diterima',
             'Mulai Timbang',
@@ -222,7 +223,7 @@ class WorkOrderController extends Controller
         for ($i = 0; $i < $validated['quantity']; $i++) {
             $newSequence = $validated['start_sequence'] + $i;
             $paddedSequence = str_pad($newSequence, 3, '0', STR_PAD_LEFT);
-            $woNumber = $year . $validated['product_kode'] . $paddedSequence . $suffix;
+            $woNumber = $prefix . $validated['product_kode'] . $paddedSequence . $suffix;
 
             // Cek dulu biar ga ada nomor WO duplikat
             $isExist = WorkOrder::where('wo_number', $woNumber)->exists();

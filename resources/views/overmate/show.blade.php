@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+    @vite('resources/css/pages/overmate-show.css')
+@endpush
+
 @section('content')
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -143,38 +147,4 @@
     </div>
 @endsection
 
-@push('styles')
-    <style>
-        .dashboard-card {
-            border: none;
-            border-radius: 10px;
-        }
-
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            font-size: 0.875rem;
-            white-space: nowrap;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-        }
-
-        .table-responsive {
-            border-radius: 10px;
-        }
-
-        .progress {
-            border-radius: 10px;
-        }
-
-        .card {
-            border-radius: 10px;
-        }
-
-        .btn {
-            border-radius: 8px;
-        }
-    </style>
-@endpush
+ 
