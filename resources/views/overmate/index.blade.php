@@ -66,12 +66,12 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 5%;">#</th>
-                                <th style="width: 15%;">Item Number</th>
-                                <th style="width: 35%;">Nama Bahan</th>
-                                <th style="width: 25%;">Manufacturer</th>
-                                <th style="width: 10%;">Overmate Qty</th>
-                                <th style="width: 12%;">Action</th>
+                                <th class="w-5p">#</th>
+                                <th class="w-15p">Item Number</th>
+                                <th class="w-35p">Nama Bahan</th>
+                                <th class="w-25p">Manufacturer</th>
+                                <th class="w-10p">Overmate Qty</th>
+                                <th class="w-12p">Action</th>
                             </tr>
                         </thead>
                         <tbody>

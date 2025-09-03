@@ -1,0 +1,76 @@
+/* Tracking Icons Visibility Fix */
+/* Ultra-specific CSS with maximum priority to ensure icons are always visible */
+
+/* Global icon fix for all tracking items */
+.tracking-item .status-icon {
+    z-index: 999999 !important;
+    position: relative !important;
+    isolation: isolate !important;
+    background: white !important;
+    border-radius: 50% !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Icon container fix */
+.tracking-item .relative.z-30.flex-shrink-0 {
+    z-index: 999998 !important;
+    position: relative !important;
+    isolation: isolate !important;
+}
+
+/* Specific ID-based targeting for maximum specificity */
+div[data-status-id] {
+    z-index: 999999 !important;
+    position: relative !important;
+    isolation: isolate !important;
+}
+
+/* Content cards must stay behind */
+.tracking-item .status-content,
+.tracking-item .min-w-0.flex-1 {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* Timeline line stays at back */
+.timeline-line {
+    z-index: 0 !important;
+}
+
+/* Force stacking context separation */
+.tracking-item {
+    isolation: isolate !important;
+    position: relative !important;
+}
+
+/* Completed icons (green) */
+.status-icon.bg-gradient-to-br.from-green-500.to-green-600 {
+    z-index: 999999 !important;
+    position: relative !important;
+    background: linear-gradient(to bottom right, #10b981, #059669) !important;
+}
+
+/* Pending icons (gray) */
+.status-icon.bg-gradient-to-br.from-gray-200.to-gray-300 {
+    z-index: 999999 !important;
+    position: relative !important;
+    background: linear-gradient(to bottom right, #e5e7eb, #d1d5db) !important;
+}
+
+/* SVG icons inside */
+.status-icon svg {
+    z-index: 1000000 !important;
+    position: relative !important;
+}
+
+/* Tailwind class overrides with maximum specificity */
+.tracking-item .w-12.h-12.rounded-full.flex.items-center.justify-center {
+    z-index: 999999 !important;
+    position: relative !important;
+    isolation: isolate !important;
+}
+
+/* Emergency override - use transform to ensure visibility */
+.status-icon {
+    transform: translateZ(1000px) !important;
+}

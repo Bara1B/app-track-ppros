@@ -1,0 +1,155 @@
+/* Scroll-triggered fade animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s ease-out;
+}
+
+/* Stagger delays for multiple elements */
+.fade-stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.fade-stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.fade-stagger-3 {
+    transition-delay: 0.3s;
+}
+
+.fade-stagger-4 {
+    transition-delay: 0.4s;
+}
+
+.fade-stagger-5 {
+    transition-delay: 0.5s;
+}
+
+/* Active states when element is visible */
+.fade-in.fade-in-active,
+.fade-in-left.fade-in-active,
+.fade-in-right.fade-in-active,
+.fade-in-up.fade-in-active,
+.fade-in-scale.fade-in-active {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+    width: 0%;
+    transition: width 0.3s ease-out;
+}
+
+/* Initial load animations */
+.initial-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: initialFadeIn 1.5s ease-out forwards;
+}
+
+.initial-fade-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: initialFadeInLeft 1.5s ease-out forwards;
+}
+
+.initial-fade-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: initialFadeInRight 1.5s ease-out forwards;
+}
+
+.initial-fade-in-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: initialFadeInScale 1.5s ease-out forwards;
+}
+
+.initial-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: initialFadeInUp 1.5s ease-out forwards;
+}
+
+/* Initial stagger delays */
+.initial-stagger-1 {
+    animation-delay: 0.2s;
+}
+
+.initial-stagger-2 {
+    animation-delay: 0.4s;
+}
+
+.initial-stagger-3 {
+    animation-delay: 0.6s;
+}
+
+.initial-stagger-4 {
+    animation-delay: 0.8s;
+}
+
+.initial-stagger-5 {
+    animation-delay: 1.0s;
+}
+
+/* Keyframes for initial animations */
+@keyframes initialFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes initialFadeInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes initialFadeInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes initialFadeInScale {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes initialFadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

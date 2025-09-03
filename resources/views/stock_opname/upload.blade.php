@@ -8,7 +8,7 @@
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold">Upload Stock Opname Excel</h3>
-            <a href="{{ route('stock-opname.index') }}" class="btn btn-outline-secondary">↩ Kembali</a>
+            <a href="{{ route('admin.stock-opname.index') }}" class="btn btn-outline-secondary">↩ Kembali</a>
         </div>
 
         @if (session('error'))
@@ -28,7 +28,7 @@
                             <p class="text-muted">Format file harus .xlsx atau .xls dengan header yang sesuai</p>
                         </div>
 
-                        <form action="{{ route('stock-opname.import') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.stock-opname.import') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="mb-4">

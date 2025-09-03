@@ -10,7 +10,7 @@
                         <a href="{{ route('overmate.index') }}" class="btn btn-sm btn-outline-secondary">Kembali</a>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('overmate.update', $overmate->item_number) }}">
+                        <form method="POST" action="{{ route('overmate.update', $overmate) }}">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">

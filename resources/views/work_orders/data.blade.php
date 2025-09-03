@@ -45,13 +45,13 @@
                             <table class="table table-sm table-striped align-middle">
                                 <thead>
                                     <tr>
-                                        <th style="width: 16rem;">Item Number</th>
-                                        <th style="width: 8rem;">Kode</th>
+                                        <th class="w-16rem">Item Number</th>
+                                        <th class="w-8rem">Kode</th>
                                         <th>Description</th>
-                                        <th style="width: 6rem;">UoM</th>
-                                        <th style="width: 10rem;">Group</th>
+                                        <th class="w-6rem">UoM</th>
+                                        <th class="w-10rem">Group</th>
                                         @if (Auth::user() && Auth::user()->role === 'admin')
-                                            <th style="width: 10rem;">Action</th>
+                                            <th class="w-10rem">Action</th>
                                         @endif
                                     </tr>
                                 </thead>

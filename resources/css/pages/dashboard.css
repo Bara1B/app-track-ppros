@@ -19,3 +19,18 @@
 #editDueDateModal .border-t button {
     border-radius: 9999px !important;
 }
+
+/* Ensure filter panel buttons (Reset/Filter) are pill-shaped and consistent across browsers */
+#dashboard-wo .p-4.mb-6 button,
+#dashboard-wo .p-4.mb-6 a {
+    border-radius: 9999px !important; /* pill */
+}
+
+/* Normalize Safari default button rendering in filter panel */
+#dashboard-wo .p-4.mb-6 button {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.25rem; /* match leading-5 */
+}

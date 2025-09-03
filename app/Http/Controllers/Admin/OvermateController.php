@@ -49,8 +49,9 @@ class OvermateController extends Controller
     /**
      * Menampilkan detail overmate berdasarkan item number.
      */
-    public function show(string $itemNumber)
+    public function show(Overmate $overmate)
     {
+        $itemNumber = $overmate->item_number;
         $overmates = Overmate::where('item_number', $itemNumber)
             ->orderBy('manufactur')
             ->get();
@@ -90,11 +91,10 @@ class OvermateController extends Controller
     }
 
     /**
-     * Hapus satu baris overmate (by item_number).
+     * Hapus satu baris overmate (by id).
      */
-    public function destroy(string $itemNumber)
+    public function destroy(Overmate $overmate)
     {
-        $overmate = Overmate::where('item_number', $itemNumber)->firstOrFail();
         $overmate->delete();
 
         return redirect()

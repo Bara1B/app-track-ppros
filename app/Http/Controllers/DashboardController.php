@@ -18,45 +18,9 @@ class DashboardController extends Controller
 {
     public function index(Request $request, $status = 'On Progress')
     {
-        // Jika yang login adalah pengguna biasa, berikan dasbor khusus
+        // Pengguna biasa tidak lagi memiliki halaman user: arahkan ke public home
         if (Auth::user()->role == 'user') {
-            // Use the parameter if provided, otherwise use request parameter
-            if (!in_array($status, ['On Progress', 'Completed'])) {
-                $status = 'On Progress';
-            }
-
-            $query = WorkOrder::with(['woDiterimaTracking', 'tracking'])->where('status', $status);
-
-            // Filter berdasarkan pencarian
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('wo_number', 'like', "%{$search}%")
-                        ->orWhere('output', 'like', "%{$search}%");
-                });
-            }
-
-            // Logika pengurutan dari dropdown
-            if ($request->filled('sort_by')) {
-                $sortParts = explode('-', $request->sort_by);
-                $sortBy = $sortParts[0];
-                $sortDirection = $sortParts[1] ?? 'asc';
-
-                $allowedSorts = ['output', 'due_date', 'created_at'];
-                if (in_array($sortBy, $allowedSorts)) {
-                    if ($sortBy === 'due_date') {
-                        $query->orderBy('due_date', $sortDirection)
-                            ->orderBy('wo_number', 'asc'); // Urutan kedua
-                    } else {
-                        $query->orderBy($sortBy, $sortDirection);
-                    }
-                }
-            } else {
-                $query->latest('created_at'); // Default sort: yang terbaru dibuat
-            }
-
-            $workOrders = $query->paginate(9)->withQueryString();
-            return view('user.dashboard', compact('workOrders', 'status'));
+            return redirect()->route('public.home');
         }
 
         // Logika untuk admin
@@ -120,8 +84,36 @@ class DashboardController extends Controller
         $overdueWorkOrders = WorkOrder::where('due_date', '<', now()->today())
             ->where('status', '!=', 'Completed')
             ->count();
+
+        // Completed (Late): WO berstatus Completed namun selesai setelah due_date
+        $completedLateWorkOrders = WorkOrder::where('status', 'Completed')
+            ->where(function ($q) {
+                // Case 1: field completed_on ada dan melewati due_date
+                $q->whereColumn('completed_on', '>', 'due_date')
+                    // Case 2: completed_on null, gunakan completed_at terakhir dari tracking yang melewati due_date
+                    ->orWhere(function ($q2) {
+                        $q2->whereNull('completed_on')
+                            ->whereExists(function ($sub) {
+                                $sub->select(DB::raw(1))
+                                    ->from('work_order_trackings as t')
+                                    ->whereColumn('t.work_order_id', 'work_orders.id')
+                                    ->whereNotNull('t.completed_at')
+                                    ->orderByDesc('t.completed_at')
+                                    ->limit(1)
+                                    ->whereColumn('t.completed_at', '>', 'work_orders.due_date');
+                            });
+                    });
+            })
+            ->count();
         
-        return view('dashboard', compact('workOrders', 'totalWorkOrders', 'pendingWorkOrders', 'completedWorkOrders', 'overdueWorkOrders'));
+        return view('workorderdashboard', compact(
+            'workOrders',
+            'totalWorkOrders',
+            'pendingWorkOrders',
+            'completedWorkOrders',
+            'overdueWorkOrders',
+            'completedLateWorkOrders'
+        ));
     }
 
     /**

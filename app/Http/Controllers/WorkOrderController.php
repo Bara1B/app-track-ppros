@@ -7,6 +7,7 @@ use App\Models\WorkOrderTracking; // <-- Jangan lupa import class ini
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\MasterProduct;
+use App\Helpers\NotificationHelper;
 
 
 class WorkOrderController extends Controller
@@ -63,13 +64,15 @@ class WorkOrderController extends Controller
 
         $workOrder->update($updateData);
 
-        return redirect(route('dashboard'))->with('success', 'Work Order berhasil di-update!');
+        NotificationHelper::updated('Work Order');
+        return redirect(route('dashboard'));
     }
 
     public function destroy(WorkOrder $workOrder)
     {
         $workOrder->delete();
-        return redirect(route('dashboard'))->with('success', 'Work Order berhasil dihapus!');
+        NotificationHelper::deleted('Work Order');
+        return redirect(route('dashboard'));
     }
 
     // Method store() yang sudah ada ...
@@ -125,8 +128,8 @@ class WorkOrderController extends Controller
         }
 
         // 6. Redirect ke halaman detail
-        return redirect()->route('work-order.show', $workOrder)
-            ->with('success', 'Work Order berhasil dibuat! Sekarang tambahkan komponen produk.');
+        NotificationHelper::created('Work Order');
+        return redirect()->route('work-order.show', $workOrder);
     }
 
     // TAMBAHKAN METHOD INI DI BAWAHNYA
@@ -180,8 +183,18 @@ class WorkOrderController extends Controller
 
         Log::info('--- PROSES SELESAI, MENGARAHKAN KEMBALI KE BROWSER ---');
 
-        return redirect()->to(url()->previous() . '#track-' . $tracking->id)
-            ->with('success', "Status '{$tracking->status_name}' berhasil diverifikasi!");
+        // Handle AJAX request
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Status '{$tracking->status_name}' berhasil diverifikasi!"
+            ]);
+        }
+
+        // Use manual close notification for verification
+        session()->flash('success', "Status '{$tracking->status_name}' berhasil diverifikasi!");
+        session()->flash('verification', true);
+        return redirect()->to(url()->previous());
     }
 
     /**
@@ -248,8 +261,8 @@ class WorkOrderController extends Controller
             }
         }
 
-        return redirect(route('dashboard'))
-            ->with('success', $validated['quantity'] . ' Work Order baru berhasil dibuat!');
+        NotificationHelper::success($validated['quantity'] . ' Work Order baru berhasil dibuat!');
+        return redirect(route('dashboard'));
     }
 
     public function bulkDestroy(Request $request)

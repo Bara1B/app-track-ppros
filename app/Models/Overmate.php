@@ -22,4 +22,14 @@ class Overmate extends Model
         'manufactur',
         'overmate_qty',
     ];
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'item_number';
+    }
 }

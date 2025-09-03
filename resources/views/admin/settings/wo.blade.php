@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Pengaturan Work Order')
+@section('title', 'Pengaturan Sistem')
 
 @section('content')
     <div class="settings-container">
         <div class="container mx-auto px-4">
             <!-- Settings Header -->
             <div class="settings-header text-center">
-                <h1 class="settings-title">Pengaturan Work Order</h1>
-                <p class="settings-subtitle">Konfigurasi sistem dan fitur Work Order</p>
+                <h1 class="settings-title">Pengaturan Sistem</h1>
+                <p class="settings-subtitle">Konfigurasi sistem dan fitur aplikasi</p>
             </div>
 
             <div class="max-w-6xl mx-auto">
                 <div class="settings-card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h2 class="card-title">Pengaturan Work Order</h2>
+                            <h2 class="card-title">Pengaturan Sistem</h2>
                             <a href="{{ route('admin.home') }}" class="back-link">
                                 <i class="fas fa-arrow-left"></i>Kembali
                             </a>
@@ -40,16 +40,16 @@
                             @method('PUT')
 
                             <div class="settings-grid">
-                                <!-- Work Order Prefix -->
+                                <!-- Prefix Setting -->
                                 <div class="setting-item wo-prefix-setting">
                                     <div class="setting-header">
-                                        <h3 class="setting-title">Prefix Nomor Work Order</h3>
+                                        <h3 class="setting-title">Prefix Nomor</h3>
                                         <div class="setting-icon">
                                             <i class="fas fa-hashtag"></i>
                                         </div>
                                     </div>
                                     <div class="setting-description">
-                                        Prefix untuk nomor Work Order yang akan digunakan sistem
+                                        Prefix untuk penomoran yang akan digunakan sistem
                                     </div>
                                     <div class="setting-control">
                                         <input type="text" id="wo_prefix" name="wo_prefix"

@@ -69,11 +69,11 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 5%;">#</th>
-                                <th style="width: 40%;">Nama Bahan</th>
-                                <th style="width: 30%;">Manufacturer</th>
-                                <th style="width: 15%;">Overmate Qty</th>
-                                <th style="width: 10%;">Percentage</th>
+                                <th class="w-5p">#</th>
+                                <th class="w-40p">Nama Bahan</th>
+                                <th class="w-30p">Manufacturer</th>
+                                <th class="w-15p">Overmate Qty</th>
+                                <th class="w-10p">Percentage</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,7 +95,7 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="d-flex align-items-center">
-                                            <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                                            <div class="progress flex-grow-1 me-2 progress-h-20">
                                                 <div class="progress-bar bg-info" role="progressbar"
                                                     style="width: {{ $percentage }}%" aria-valuenow="{{ $percentage }}"
                                                     aria-valuemin="0" aria-valuemax="100">

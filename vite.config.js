@@ -14,7 +14,13 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/css/tracking.css',
                 'resources/css/custom-table.css',
+                'resources/css/user-home.css',
+                'resources/css/user-navbar.css',
+                'resources/css/sidebar.css',
+                'resources/css/admin-home.css',
+                'resources/css/tracking-enhanced.css',
                 'resources/js/app.js',
+                'resources/js/admin-sidebar.js',
             ],
             refresh: [
                 'resources/views/**',
@@ -63,9 +69,7 @@ export default defineConfig({
             })()
         ) : false,
         hmr: {
-            protocol: process.env.APP_URL?.startsWith('https') ? 'wss' : 'ws',
             host: 'localhost',
-            port: 5174,
         },
         watch: { usePolling: true, interval: 300 },
     },

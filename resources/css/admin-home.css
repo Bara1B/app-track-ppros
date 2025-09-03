@@ -7,6 +7,66 @@
   overflow: hidden;
 }
 
+/* Ensure CTA text is white inside nav-card */
+.nav-card .card-body .inline-flex,
+.nav-card .card-body .inline-flex *,
+.nav-card .card-body .inline-flex:visited,
+.nav-card .card-body .inline-flex span,
+.nav-card .card-body .inline-flex i,
+.nav-card .card-body .inline-flex svg {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+
+/* Force button background colors to prevent white background */
+.nav-card .inline-flex {
+  background: linear-gradient(to right, #2563eb, #2563eb, #1e40af) !important;
+  color: white !important;
+}
+
+.nav-card .inline-flex:hover {
+  background: linear-gradient(to right, #1d4ed8, #1d4ed8, #1e3a8a) !important;
+  color: white !important;
+}
+
+/* Specific button colors matching card title colors */
+/* Work Order Tracking - Blue (text-primary) */
+.nav-card:has(.text-primary) .inline-flex {
+  background: linear-gradient(to right, #0d6efd, #0d6efd, #0a58ca) !important;
+}
+
+.nav-card:has(.text-primary) .inline-flex:hover {
+  background: linear-gradient(to right, #0b5ed7, #0b5ed7, #084298) !important;
+}
+
+/* Stock Opname - Green (text-success) */
+.nav-card:has(.text-success) .inline-flex {
+  background: linear-gradient(to right, #198754, #198754, #146c43) !important;
+}
+
+.nav-card:has(.text-success) .inline-flex:hover {
+  background: linear-gradient(to right, #157347, #157347, #0f5132) !important;
+}
+
+/* Data Master - Cyan (text-info) */
+.nav-card:has(.text-info) .inline-flex {
+  background: linear-gradient(to right, #0dcaf0, #0dcaf0, #0aa2c0) !important;
+}
+
+.nav-card:has(.text-info) .inline-flex:hover {
+  background: linear-gradient(to right, #0bb5d8, #0bb5d8, #088a9b) !important;
+}
+
+/* Settings - Yellow (text-warning) */
+.nav-card:has(.text-warning) .inline-flex {
+  background: linear-gradient(to right, #ffc107, #ffc107, #e0a800) !important;
+}
+
+.nav-card:has(.text-warning) .inline-flex:hover {
+  background: linear-gradient(to right, #ffca2c, #ffca2c, #d39e00) !important;
+}
+
 .nav-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
@@ -22,10 +82,12 @@
 
 .nav-card .btn {
   transition: all 0.3s ease;
+  color: #fff !important;
 }
 
 .nav-card:hover .btn {
   transform: translateX(5px);
+  color: #fff !important;
 }
 
 .nav-card .btn span:first-child {

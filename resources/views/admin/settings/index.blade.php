@@ -55,13 +55,13 @@
                             <!-- Work Order Settings -->
                             <div class="setting-item">
                                 <div class="setting-header">
-                                    <h3 class="setting-title">Work Order Settings</h3>
+                                    <h3 class="setting-title">Settings Sistem</h3>
                                     <div class="setting-icon">
                                         <i class="fas fa-cogs"></i>
                                     </div>
                                 </div>
                                 <div class="setting-description">
-                                    Konfigurasi pengaturan untuk Work Order tracking dan management
+                                    Konfigurasi pengaturan untuk Work Order tracking dan Stock Opname
                                 </div>
                                 <div class="setting-control">
                                     <a href="{{ route('settings.edit') }}" class="btn-save">

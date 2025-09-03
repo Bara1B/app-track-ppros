@@ -50,7 +50,7 @@
             {{-- Card Stock Opname --}}
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm h-100 nav-card min-h-[260px]"
-                    onclick="window.location.href='{{ route('stock-opname.index') }}'">
+                    onclick="window.location.href='{{ route('admin.stock-opname.index') }}'">
                     <div class="card-body p-4 md:min-h-[240px]">
                         <div class="flex items-stretch">
                             <div class="w-8/12 flex flex-col h-full">
@@ -170,7 +170,126 @@
                         <h5 class="fw-bold text-center mb-3">Ringkasan Data</h5>
                         <div class="p-3 border rounded">
                             <div class="relative w-full h-72">
-                                <canvas id="summaryDonutChart"></canvas>
+                                <canvas id="summaryDonutChart" data-labels='@json($chartLabels ?? [])'
+                                    data-values='@json($chartValues ?? [])' class="w-full h-full">
+                                </canvas>
+                                <script>
+                                    // Fallback init for donut chart if Vite bundle fails
+                                    (function() {
+                                        console.log('[Chart Debug] Admin Home fallback script loaded');
+
+                                        function tryInitDonut() {
+                                            console.log('[Chart Debug] tryInitDonut called');
+                                            const canvas = document.getElementById('summaryDonutChart');
+                                            console.log('[Chart Debug] Canvas found:', !!canvas);
+                                            console.log('[Chart Debug] Already inited:', canvas?.dataset?.inited);
+                                            console.log('[Chart Debug] Chart available:', !!window.Chart);
+
+                                            // Skip if no canvas or Chart not available
+                                            if (!canvas || !window.Chart) {
+                                                console.log('[Chart Debug] Missing canvas or Chart');
+                                                return false;
+                                            }
+
+                                            // Skip if already initialized (but allow re-init for debugging)
+                                            if (canvas.dataset.inited === '1') {
+                                                console.log('[Chart Debug] Chart already initialized, skipping');
+                                                return true;
+                                            }
+
+                                            let labels = [],
+                                                values = [];
+                                            try {
+                                                labels = JSON.parse(canvas.getAttribute('data-labels') || '[]');
+                                                values = JSON.parse(canvas.getAttribute('data-values') || '[]');
+                                            } catch (e) {
+                                                /* noop */
+                                            }
+
+                                            console.log('[Chart Debug] Fallback labels:', labels);
+                                            console.log('[Chart Debug] Fallback values:', values);
+
+                                            // Only create dummy data if both arrays are completely empty
+                                            if (labels.length === 0 && values.length === 0) {
+                                                console.log('[Chart Debug] No backend data, creating dummy chart');
+                                                labels = ['No Data Available'];
+                                                values = [1];
+                                            } else {
+                                                console.log('[Chart Debug] Using real data - Labels:', labels.length, 'Values:', values.length);
+                                            }
+
+                                            const ctx = canvas.getContext('2d');
+                                            console.log('[Chart Debug] Creating fallback donut chart...');
+
+                                            try {
+                                                // eslint-disable-next-line no-new
+                                                const chart = new Chart(ctx, {
+                                                    type: 'doughnut',
+                                                    data: {
+                                                        labels,
+                                                        datasets: [{
+                                                            data: values,
+                                                            backgroundColor: [
+                                                                '#6366f1', // Indigo - Total Data Master Work Order
+                                                                '#3b82f6', // Blue - Total Work Order
+                                                                '#10b981', // Emerald - Completed
+                                                                '#f59e0b', // Amber - On Progress
+                                                                '#ef4444' // Red - Overdue
+                                                            ],
+                                                            borderWidth: 0,
+                                                            hoverBorderWidth: 2,
+                                                            hoverBorderColor: '#ffffff'
+                                                        }]
+                                                    },
+                                                    options: {
+                                                        responsive: true,
+                                                        maintainAspectRatio: false,
+                                                        cutout: '60%',
+                                                        plugins: {
+                                                            legend: {
+                                                                display: false
+                                                            },
+                                                            tooltip: {
+                                                                callbacks: {
+                                                                    label: function(context) {
+                                                                        const label = context.label || '';
+                                                                        const value = context.parsed || 0;
+                                                                        const total = (context.dataset.data || []).reduce((a, b) => a +
+                                                                            (Number(b) || 0), 0) || 1;
+                                                                        const pct = ((value / total) * 100).toFixed(1);
+                                                                        return `${label}: ${value} (${pct}%)`;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                                canvas.dataset.inited = '1';
+                                                console.log('[Chart Debug] Fallback donut chart created successfully:', chart);
+                                                return true;
+                                            } catch (error) {
+                                                console.error('[Chart Debug] Error creating donut chart:', error);
+                                                return false;
+                                            }
+                                        }
+
+                                        function initWhenReady() {
+                                            console.log('[Chart Debug] initWhenReady called');
+                                            if (!tryInitDonut()) {
+                                                console.log('[Chart Debug] Chart not ready, retrying in 100ms');
+                                                setTimeout(() => initWhenReady(), 100);
+                                            }
+                                        }
+
+                                        if (document.readyState === 'loading') {
+                                            document.addEventListener('DOMContentLoaded', () => {
+                                                setTimeout(() => initWhenReady(), 100);
+                                            });
+                                        } else {
+                                            setTimeout(() => initWhenReady(), 100);
+                                        }
+                                    })();
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -222,6 +341,7 @@
                                 <div>
                                     <h6 class="text-muted mb-1">Total Work Order</h6>
                                     <h4 class="fw-bold mb-0">{{ $stats['total_wo'] ?? 0 }}</h4>
+                                    <small class="text-muted">work order aktif</small>
                                 </div>
                             </div>
                         </div>
@@ -326,68 +446,19 @@
     @endsection
 
     @push('styles')
-        @vite('resources/css/admin-home.css')
+        {{-- removed duplicate: admin-home.css already included globally via @vite in layouts.app --}}
     @endpush
 
     @push('scripts')
-        {{-- Pustaka Chart.js --}}
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        {{-- Chart is bundled via Vite in resources/js/app.js --}}
         <script>
-            // Donut chart ringkasan total
+            // Contoh penggunaan notifikasi JavaScript
             document.addEventListener('DOMContentLoaded', function() {
-                const ctx = document.getElementById('summaryDonutChart');
-                if (!ctx) return;
-
-                const dataValues = [
-                    {{ $stats['total_master_work_order'] ?? 0 }},
-                    {{ $stats['total_overmate'] ?? 0 }},
-                    {{ $stats['total_stock_opname'] ?? 0 }},
-                    {{ $stats['total_wo'] ?? 0 }}
-                ];
-
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Master Work Order', 'Master Overmate', 'Stock Opname', 'Work Order'],
-                        datasets: [{
-                            data: dataValues,
-                            backgroundColor: [
-                                'rgba(59, 130, 246, 0.8)', // blue-500
-                                'rgba(139, 92, 246, 0.8)', // purple-500
-                                'rgba(16, 185, 129, 0.8)', // emerald-500
-                                'rgba(251, 191, 36, 0.8)' // amber-400
-                            ],
-                            borderColor: [
-                                'rgba(59, 130, 246, 1)',
-                                'rgba(139, 92, 246, 1)',
-                                'rgba(16, 185, 129, 1)',
-                                'rgba(251, 191, 36, 1)'
-                            ],
-                            borderWidth: 2,
-                            hoverOffset: 6,
-                            cutout: '60%'
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    usePointStyle: true
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const value = context.parsed;
-                                        return `${context.label}: ${value}`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
+                // Contoh notifikasi untuk demo
+                // Uncomment untuk test
+                // setTimeout(() => {
+                //     Notify.success('Selamat datang di dashboard!');
+                // }, 1000);
             });
         </script>
     @endpush

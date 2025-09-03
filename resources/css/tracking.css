@@ -25,6 +25,15 @@
     padding-left: 40px;
     /* Jarak untuk teks dari tepi kiri */
     margin-bottom: 30px;
+    /* Pastikan content tidak menutupi icon */
+    overflow: visible;
+}
+
+/* Pastikan konten timeline step memiliki z-index lebih rendah */
+.timeline-step .timeline-step-title,
+.timeline-step .timeline-step-date {
+    position: relative;
+    z-index: 1;
 }
 
 /* Bulatan (point) */
@@ -40,7 +49,9 @@
     background-color: #adb5bd;
     /* Warna default (abu-abu) untuk bulatan */
     border: 3px solid #e9ecef;
-    z-index: 1;
+    z-index: 10;
+    /* Tingkatkan z-index agar selalu terlihat */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Mengubah warna bulatan jika sudah selesai (completed) */
@@ -48,6 +59,9 @@
     background-color: #198754;
     /* Warna hijau */
     border-color: #d1e7dd;
+    z-index: 11;
+    /* Z-index lebih tinggi untuk completed steps */
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
 }
 
 .timeline-step-title {

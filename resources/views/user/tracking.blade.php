@@ -1,6 +1,34 @@
 @extends('layouts.app')
 
 @vite('resources/css/tracking.css')
+@vite('resources/css/tracking-icons-fix.css')
+
+@push('styles')
+    <style>
+        /* Force icon visibility for user tracking */
+        .timeline-step::before {
+            z-index: 1000 !important;
+            position: absolute !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .timeline-step.completed::before {
+            z-index: 1001 !important;
+            box-shadow: 0 6px 12px rgba(25, 135, 84, 0.4) !important;
+        }
+
+        /* Ensure content doesn't overflow and cover icons */
+        .timeline-step {
+            overflow: visible !important;
+            position: relative !important;
+        }
+
+        .timeline-step>div {
+            z-index: 1 !important;
+            position: relative !important;
+        }
+    </style>
+@endpush
 
 @section('content')
     <div class="container py-5">

@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\NotificationHelper;
 
 class StockOpnameController extends Controller
 {
@@ -26,7 +27,7 @@ class StockOpnameController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('stock_opname.index', compact('uploadedFiles'));
+        return view('admin.stock_opname.index', compact('uploadedFiles'));
     }
 
     /**
@@ -56,7 +57,8 @@ class StockOpnameController extends Controller
      */
     public function create()
     {
-        return view('stock_opname.upload');
+        // Upload form is integrated into the admin index page
+        return redirect()->route('admin.stock-opname.index');
     }
 
     /**
@@ -84,8 +86,8 @@ class StockOpnameController extends Controller
                 'status' => 'uploaded',
             ]);
 
-            return redirect()->route('stock-opname.index')
-                ->with('success', 'File Excel berhasil diupload! Silakan klik "Import Data" untuk memproses file.');
+            NotificationHelper::success('File Excel berhasil diupload! Silakan klik "Import Data" untuk memproses file.');
+            return redirect()->route('admin.stock-opname.index');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat upload: ' . $e->getMessage());
@@ -101,7 +103,7 @@ class StockOpnameController extends Controller
             $stockOpnameFile = StockOpnameFile::findOrFail($fileId);
 
             if ($stockOpnameFile->status !== 'uploaded') {
-                return redirect()->route('stock-opname.index')
+                return redirect()->route('admin.stock-opname.index')
                     ->with('error', 'File sudah diimport atau tidak valid.');
             }
 
@@ -118,10 +120,10 @@ class StockOpnameController extends Controller
                 'imported_at' => now(),
             ]);
 
-            return redirect()->route('stock-opname.show-data', $fileId)
-                ->with('success', 'Data berhasil diimport dari file: ' . $stockOpnameFile->original_name);
+            NotificationHelper::imported('Data dari file: ' . $stockOpnameFile->original_name);
+            return redirect()->route('admin.stock-opname.show-data', $fileId);
         } catch (\Exception $e) {
-            return redirect()->route('stock-opname.index')
+            return redirect()->route('admin.stock-opname.index')
                 ->with('error', 'Terjadi kesalahan saat import: ' . $e->getMessage());
         }
     }
@@ -141,8 +143,8 @@ class StockOpnameController extends Controller
                 'stok_fisik' => $request->stok_fisik
             ]);
 
-            return redirect()->back()
-                ->with('success', 'Stok fisik berhasil diupdate!');
+            NotificationHelper::updated('Stok fisik');
+            return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat update stok fisik: ' . $e->getMessage());
@@ -190,10 +192,10 @@ class StockOpnameController extends Controller
             // Hapus record file dari database
             $stockOpnameFile->delete();
 
-            return redirect()->route('stock-opname.index')
-                ->with('success', 'File berhasil dihapus: ' . $stockOpnameFile->original_name);
+            NotificationHelper::deleted('File: ' . $stockOpnameFile->original_name);
+            return redirect()->route('admin.stock-opname.index');
         } catch (\Exception $e) {
-            return redirect()->route('stock-opname.index')
+            return redirect()->route('admin.stock-opname.index')
                 ->with('error', 'Terjadi kesalahan saat hapus file: ' . $e->getMessage());
         }
     }

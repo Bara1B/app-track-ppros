@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkOrder;
+use App\Models\WorkOrderTracking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -10,19 +11,17 @@ use Carbon\Carbon;
 class ChartController extends Controller
 {
     /**
-     * Menyediakan data total Work Order per bulan untuk grafik.
+     * Menyediakan data total Work Order DITERIMA per bulan (berdasarkan tracking 'WO Diterima').
      */
     public function monthlyWorkOrders()
     {
-        // Ambil data dari database, hitung jumlah WO per bulan untuk tahun ini
-        $data = WorkOrder::select(
-            // ================================================ #
-            //    DIKEMBALIKAN LAGI KE due_date, BRO            #
-            // ================================================ #
-            DB::raw('MONTH(due_date) as month'), // Diubah kembali ke due_date
-            DB::raw('COUNT(*) as count')
-        )
-            ->whereYear('due_date', now()->year) // Diubah kembali ke due_date
+        // Hitung jumlah WO Diterima per bulan di tahun berjalan berdasarkan completed_at pada step 'WO Diterima'
+        $data = WorkOrderTracking::select(
+                DB::raw('MONTH(completed_at) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('status_name', 'WO Diterima')
+            ->whereYear('completed_at', now()->year)
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('count', 'month')
@@ -43,7 +42,7 @@ class ChartController extends Controller
         // Kirim data dalam format JSON yang siap digunakan oleh Chart.js
         return response()->json([
             'labels' => $monthLabels,
-            'data' => array_values($chartData),
+            'values' => array_values($chartData), // Changed from 'data' to 'values' to match frontend expectation
         ]);
     }
 }
