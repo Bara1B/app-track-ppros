@@ -131,7 +131,7 @@
         </div>
 
         <a href="#" class="logout-link"
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            onclick="confirmLogout(event);">
             <i class="fas fa-sign-out-alt menu-icon"></i>
             <span class="menu-text">Logout</span>
         </a>

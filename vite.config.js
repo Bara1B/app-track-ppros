@@ -12,6 +12,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/sass/app.scss',
+                'resources/sass/login.scss',
+                'resources/css/login.css',
                 'resources/css/tracking.css',
                 'resources/css/custom-table.css',
                 'resources/css/user-home.css',

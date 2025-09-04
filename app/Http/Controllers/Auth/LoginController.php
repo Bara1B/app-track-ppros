@@ -41,6 +41,19 @@ class LoginController extends Controller
     }
 
     /**
+     * Log the user out of the application with a success flash message.
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Logout berhasil');
+    }
+
+    /**
      * Handle a failed authentication attempt.
      *
      * @param  \Illuminate\Http\Request  $request

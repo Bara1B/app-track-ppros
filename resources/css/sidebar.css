@@ -65,6 +65,8 @@ html.loaded .main-content {
     width: var(--sidebar-width);
     transition: width var(--transition-duration) var(--transition-timing);
     overflow: hidden;
+    display: flex; /* make header, menu, footer stack vertically */
+    flex-direction: column;
 }
 
 .unified-sidebar.collapsed {
@@ -183,13 +185,14 @@ html.loaded .main-content {
 
 /* Sidebar Menu */
 .sidebar-menu {
-    flex: 1;
+    flex: 1; /* take remaining space between header and footer */
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem 0;
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: #d1d5db transparent;
+    min-height: 0; /* allow scrolling inside flex container (Safari fix) */
 }
 
 .menu-section {
@@ -301,6 +304,10 @@ html.loaded .main-content {
 .sidebar-footer {
     border-top: 1px solid #e5e7eb;
     padding: 0.75rem;
+    margin-top: auto; /* stays at bottom of sidebar */
+    position: sticky; /* ensure always visible even if container scrolls */
+    bottom: 0;
+    background: white;
 }
 
 .sidebar-profile {

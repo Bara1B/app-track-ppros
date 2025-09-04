@@ -96,7 +96,7 @@
                                 </div>
 
                                 <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    onclick="confirmLogout(event);"
                                     class="text-gray-700 hover:text-red-600 transition-colors duration-200">
                                     <i class="fas fa-sign-out-alt"></i>
                                 </a>
@@ -116,6 +116,56 @@
             </div>
         @endif
     </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-confirm-overlay" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-5">
+            <div class="flex items-center gap-3 mb-3">
+                <i class="fas fa-sign-out-alt text-red-500 text-xl"></i>
+                <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Logout</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-5">Anda yakin ingin keluar?</p>
+            <div class="flex justify-end gap-2">
+                <button type="button" class="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-50"
+                    onclick="hideLogoutConfirm()">
+                    <i class="fas fa-times mr-1"></i> Tidak
+                </button>
+                <button type="button" class="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+                    onclick="proceedLogout()">
+                    <i class="fas fa-check mr-1"></i> Ya
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pendingLogoutForm;
+        function confirmLogout(e) {
+            e.preventDefault();
+            // Find the nearest logout form on the page
+            pendingLogoutForm = document.getElementById('logout-form');
+            const overlay = document.getElementById('logout-confirm-overlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            } else {
+                // Fallback to native confirm
+                if (confirm('Anda yakin ingin keluar?')) {
+                    if (pendingLogoutForm) pendingLogoutForm.submit();
+                }
+            }
+        }
+        function hideLogoutConfirm() {
+            const overlay = document.getElementById('logout-confirm-overlay');
+            if (!overlay) return;
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+        function proceedLogout() {
+            hideLogoutConfirm();
+            if (pendingLogoutForm) pendingLogoutForm.submit();
+        }
+    </script>
 
     @stack('scripts')
 </body>

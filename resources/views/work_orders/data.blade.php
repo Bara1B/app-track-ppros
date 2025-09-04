@@ -48,7 +48,7 @@
                                         <th class="w-16rem">Item Number</th>
                                         <th class="w-8rem">Kode</th>
                                         <th>Description</th>
-                                        <th class="w-6rem">UoM</th>
+                                        <th class="w-6rem">Description 2</th>
                                         <th class="w-10rem">Group</th>
                                         @if (Auth::user() && Auth::user()->role === 'admin')
                                             <th class="w-10rem">Action</th>

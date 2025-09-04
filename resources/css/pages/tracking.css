@@ -1,0 +1,147 @@
+/* Tracking Stepper Styles */
+
+/* Horizontal stepper layout */
+.horizontal-layout {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  min-height: 140px !important;
+  padding: 40px 20px !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Extra specificity to ensure horizontal on desktop */
+#horizontal-tracking {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 0 !important;
+  padding: 24px 0 !important;
+  flex-wrap: nowrap !important; /* prevent breaking to next line */
+  overflow-x: auto !important;
+}
+
+#horizontal-tracking .step-item {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  min-width: 80px !important; /* keep width so steps line up */
+  margin: 0 6px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.horizontal-layout .step-item {
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  min-width: 0 !important;
+  margin: 0 8px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.horizontal-layout .step-item:first-child {
+  margin-left: 0 !important;
+}
+
+.horizontal-layout .step-item:last-child {
+  margin-right: 0 !important;
+}
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+  .horizontal-layout {
+    display: none !important;
+  }
+}
+
+/* Icons row: fixes vertical centering and start/end offsets */
+.icons-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  /* icon height */
+  padding: 0 0;
+  /* add 4px gap at both ends so line doesn't touch icons */
+}
+
+/* Base line (gray) and progress line (blue) centered at icon middle */
+.track-line {
+  position: absolute;
+  left: 0;
+  /* match updated icons-row padding */
+  right: 0;
+  top: 14px;
+  /* 64px/2 - 3px/2 rounded up for optical centering */
+  height: 3px;
+  /* slimmer line for cleaner look */
+  background: #e5e7eb;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+.track-line-progress {
+  position: absolute;
+  left: 0;
+  top: 14px;
+  /* match track-line vertical center */
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  border-radius: 9999px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.step-item {
+  flex: 1;
+  /* responsive spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 80px;
+  /* prevent overflow on very small widths */
+}
+
+.step-label {
+  /* normalize label height so all nodes align */
+  min-height: 32px;
+  /* ~2 lines */
+  max-width: 72px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.track-line-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 40%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .45), rgba(255, 255, 255, 0));
+  filter: blur(2px);
+  animation: shimmer 2.2s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(240%);
+  }
+}

@@ -29,7 +29,7 @@
                         </div>
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">UoM</label>
+                                <label class="form-label">Description 2</label>
                                 <input type="text" name="uom" class="form-control @error('uom') is-invalid @enderror" value="{{ old('uom') }}">
                                 @error('uom')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>

@@ -6,12 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/sass/login.scss', 'resources/css/login.css', 'resources/js/app.js'])
+    {{-- Fallback untuk production build --}}
+    @if (app()->environment('production'))
+        <link rel="stylesheet" href="{{ asset('build/assets/app-Ckx1K_H0.css') }}">
+    @endif
 </head>
 
 <body style="font-family: 'Poppins', sans-serif;">
+    <!-- Notification Component to show flash messages -->
+    <x-notification />
     <!-- Global Loading Overlay (auth layout) -->
     <div id="global-loading"
         class="hidden fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm items-center justify-center">
