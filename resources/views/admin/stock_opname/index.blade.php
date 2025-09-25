@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
-<style>
+    <style>
         .so-card {
             border: 1px solid #edf2f7;
             border-radius: 12px;
@@ -76,7 +76,7 @@
                 justify-content: flex-start !important;
             }
         }
-</style>
+    </style>
 @endpush
 
 @section('content')
@@ -116,11 +116,12 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="file" class="form-label">Pilih File Excel</label>
-                                <input type="file" class="form-control @error('file') is-invalid @enderror"
-                                    id="file" name="file" accept=".xlsx,.xls" required>
-                                @error('file')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <input type="file"
+                                    class="form-control @if ($errors && $errors->has('file')) is-invalid @endif" id="file"
+                                    name="file" accept=".xlsx,.xls" required>
+                                @if ($errors && $errors->has('file'))
+                                    <div class="invalid-feedback">{{ $errors->first('file') }}</div>
+                                @endif
                                 <div class="form-text">File terpilih: <span id="chosen-file-name" class="fw-semibold">Belum
                                         ada</span></div>
                             </div>
@@ -301,34 +302,34 @@
 @endsection
 
 @push('scripts')
-<script>
+    <script>
         (function() {
-        const input = document.getElementById('file');
-        const chosen = document.getElementById('chosen-file-name');
-        if (!input) return;
+            const input = document.getElementById('file');
+            const chosen = document.getElementById('chosen-file-name');
+            if (!input) return;
             input.addEventListener('change', function() {
-            const file = this.files && this.files[0];
+                const file = this.files && this.files[0];
                 if (!file) {
                     if (chosen) chosen.textContent = 'Belum ada';
                     return;
                 }
-            const name = file.name.toLowerCase();
-            const validExt = name.endsWith('.xlsx') || name.endsWith('.xls');
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (!validExt) {
-                alert('Hanya file Excel (.xlsx atau .xls) yang diperbolehkan.');
-                this.value = '';
-                if (chosen) chosen.textContent = 'Belum ada';
-                return;
-            }
-            if (file.size > maxSize) {
-                alert('Ukuran file melebihi 10MB.');
-                this.value = '';
-                if (chosen) chosen.textContent = 'Belum ada';
-                return;
-            }
-            if (chosen) chosen.textContent = file.name;
-        });
-    })();
-</script>
+                const name = file.name.toLowerCase();
+                const validExt = name.endsWith('.xlsx') || name.endsWith('.xls');
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (!validExt) {
+                    alert('Hanya file Excel (.xlsx atau .xls) yang diperbolehkan.');
+                    this.value = '';
+                    if (chosen) chosen.textContent = 'Belum ada';
+                    return;
+                }
+                if (file.size > maxSize) {
+                    alert('Ukuran file melebihi 10MB.');
+                    this.value = '';
+                    if (chosen) chosen.textContent = 'Belum ada';
+                    return;
+                }
+                if (chosen) chosen.textContent = file.name;
+            });
+        })();
+    </script>
 @endpush

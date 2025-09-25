@@ -10,7 +10,7 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         env_file:
-            - .env.docker
+            - .env
         environment:
             WWWUSER: 501
             WWWGROUP: 20

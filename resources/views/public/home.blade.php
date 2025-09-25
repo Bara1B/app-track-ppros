@@ -49,14 +49,25 @@
                         </svg>
                         Lihat Work Orders
                     </a>
-                    <a href="{{ route('public.tracking', $latestWorkOrder) }}"
-                        class="inline-flex items-center px-8 py-4 border-2 border-transparent text-lg font-medium rounded-xl text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                        Mulai Tracking
-                    </a>
+                    @if ($latestWorkOrder)
+                        <a href="{{ route('public.tracking', $latestWorkOrder) }}"
+                            class="inline-flex items-center px-8 py-4 border-2 border-transparent text-lg font-medium rounded-xl text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Mulai Tracking
+                        </a>
+                    @else
+                        <a href="{{ route('public.work-orders') }}"
+                            class="inline-flex items-center px-8 py-4 border-2 border-transparent text-lg font-medium rounded-xl text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Lihat Work Orders
+                        </a>
+                    @endif
                 </div>
 
             </div>

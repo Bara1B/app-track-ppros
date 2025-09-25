@@ -2,6 +2,14 @@
 
 namespace App\Exports;
 
+/**
+ * Stock Opname Filled Export
+ * 
+ * @noinspection PhpUndefinedClassInspection
+ * @noinspection PhpUndefinedNamespaceInspection
+ * @noinspection PhpUndefinedMethodInspection
+ */
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -13,6 +21,15 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
+/**
+ * Stock Opname Filled Export
+ * 
+ * @implements FromQuery
+ * @implements WithMapping
+ * @implements WithHeadings
+ * @implements WithColumnWidths
+ * @implements WithStyles
+ */
 class StockOpnameFilledExport implements FromQuery, WithMapping, WithHeadings, WithColumnWidths, WithStyles
 {
     protected int $fileId;
@@ -129,7 +146,7 @@ class StockOpnameFilledExport implements FromQuery, WithMapping, WithHeadings, W
         ];
     }
 
-    public function styles(Worksheet $sheet)
+    public function styles(Worksheet $sheet): array
     {
         return [
             1 => [

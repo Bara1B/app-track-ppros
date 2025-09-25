@@ -2,6 +2,14 @@
 
 namespace App\Imports;
 
+/**
+ * Stock Opname Import
+ * 
+ * @noinspection PhpUndefinedClassInspection
+ * @noinspection PhpUndefinedNamespaceInspection
+ * @noinspection PhpUndefinedMethodInspection
+ */
+
 use App\Models\StockOpname;
 use App\Models\OvermateMaster;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -9,6 +17,13 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Carbon\Carbon;
+
+/**
+ * @mixin ToModel
+ * @mixin WithHeadingRow
+ * @mixin WithBatchInserts
+ * @mixin WithChunkReading
+ */
 
 class StockOpnameImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading
 {

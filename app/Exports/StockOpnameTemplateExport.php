@@ -2,6 +2,14 @@
 
 namespace App\Exports;
 
+/**
+ * Stock Opname Template Export
+ * 
+ * @noinspection PhpUndefinedClassInspection
+ * @noinspection PhpUndefinedNamespaceInspection
+ * @noinspection PhpUndefinedMethodInspection
+ */
+
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -9,6 +17,13 @@ use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+
+/**
+ * @mixin FromArray
+ * @mixin WithHeadings
+ * @mixin WithStyles
+ * @mixin WithColumnWidths
+ */
 
 class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, WithColumnWidths
 {
@@ -146,7 +161,7 @@ class StockOpnameTemplateExport implements FromArray, WithHeadings, WithStyles, 
         ];
     }
 
-    public function styles(Worksheet $sheet)
+    public function styles(Worksheet $sheet): array
     {
         return [
             // Header styling
